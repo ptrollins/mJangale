@@ -1,0 +1,75 @@
+{% extends "template.html" %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="mainContent">
+            <div class="container">
+              <h3>Select:</h3>
+              <form class="form-inline" role="form">
+                <div class="form-group">
+                  <label for="app">App:</label>
+                  <select class="form-control" id="sel1">
+                    <option>All</option>
+                    <option>CalculerAuCE1</option>
+                    <option>LireAuCE1</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="exercise">Exercise:</label>
+                      <select class="form-control" id="sel2">
+                        <option>All</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                      </select>
+                </div>
+                <div class="form-group">
+                  <label for="daterange">Date Range:</label>
+                      <select class="form-control" id="sel3">
+                        <option>Week</option>
+                        <option>Month</option>
+                        <option>Year</option>
+                      </select>
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+              </form>
+            </div>
+        </div>
+        <div class="square">
+            <canvas id="canvas" height="450" width="600"></canvas>
+        </div>
+
+
+        <script>
+        var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+        var barChartData = {
+            labels : ["February","March","April","May"],
+            datasets : [
+                {
+                    fillColor : "rgba(220,220,220,0.5)",
+                    strokeColor : "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                     data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor()]
+                },
+                {
+                    fillColor : "rgba(151,187,205,0.5)",
+                    strokeColor : "rgba(151,187,205,0.8)",
+                    highlightFill : "rgba(151,187,205,0.75)",
+                    highlightStroke : "rgba(151,187,205,1)",
+                     data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor()]
+                }
+            ]
+        };
+        window.onload = function(){
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myBar = new Chart(ctx).Bar(barChartData, {
+                responsive : true
+            });
+        }
+        </script>
+    {% else %}
+        <a href="admin">Login</a>
+    {% endif %}
+{% endblock %}
