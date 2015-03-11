@@ -8,7 +8,7 @@ from django.core.context_processors import csrf  # For form POST security CSRF t
 from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.contrib.admin.views.decorators import staff_member_required
-# ptrollins@hotmail.com:Mjangale2015!
+
 
 
 def index(request):
