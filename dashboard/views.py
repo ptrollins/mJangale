@@ -153,15 +153,16 @@ def handle_csv_upload(csvfile):
         schoolObj = School.objects.get_or_create(id_school=int(row[3]))[0]
 
         classObj = Classroom.objects.get_or_create(id_class=row[4], fk_school=schoolObj)[0]
-        print('Score')
+        print('1')
         # User.objects.get_or_create(id_student=int(row[2]), school=schoolOjb, id_class=row[4])
         # Stores primary key to use as foreign key in Score Insert
         # User.objects.get_or_create(id_student=int(row[2]))
         studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
-
+        print('1')
         # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
         s, _ = Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj)
         #  Adds score to the Score obj
+        print('1')
         print('Score obj', s)
         s.score = int(row[6])
         print('Results pre db', s.score)
