@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
@@ -137,7 +138,6 @@ def upload_file(request):
 def handle_csv_upload(csvfile):
     reader = csv.reader(csvfile)  # read the CSV file into a list of strings
     connection = sqlite3.connect('dashboard.db')  # Create the database connection and cursor
-
     for row in reader:  # for each row from the CSV format the data to correct data type and insert into database
         # 0 = id_app, 1 = date, 2 = id_student, 3 = id_school, 4 = id_class,
         # 5 = id_exercise, 6 = score, 7 = scoremax_possible
@@ -159,7 +159,11 @@ def handle_csv_upload(csvfile):
             # User.objects.get_or_create(id_student=int(row[2]))
             studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
 
-            Score.objects.get_or_create(date=formatted_date, score=int(row[6]), fk_student=studObj, fk_exercise=exerObj)
+            # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
+            s, _ = Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj)
+            #  Adds score to the Score obj
+            s.score = int(row[6])
+            s.save()
 
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
