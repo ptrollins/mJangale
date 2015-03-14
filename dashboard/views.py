@@ -137,38 +137,36 @@ def upload_file(request):
 
 def handle_csv_upload(csvfile):
     reader = csv.reader(csvfile)  # read the CSV file into a list of strings
-    connection = sqlite3.connect('dashboard.db')  # Create the database connection and cursor
+
     for row in reader:  # for each row from the CSV format the data to correct data type and insert into database
         # 0 = id_app, 1 = date, 2 = id_student, 3 = id_school, 4 = id_class,
         # 5 = id_exercise, 6 = score, 7 = scoremax_possible
         formatted_date = format_date(row[1])
-        with connection:
-            # .get_or_create creates a new object if it does not exist but it does not return the object
-            # use .get to retrieve the ojbect to pass as foreign key
-            appObj = App.objects.get(id_app=int(row[0]))
 
-            exerObj = Exercise.objects.get_or_create(fk_app=appObj, id_exercise=int(row[5]),
-                                                scoremax_possible=int(row[7]))[0]
+        # .get_or_create creates a new object if it does not exist but it does not return the object
+        # use .get to retrieve the ojbect to pass as foreign key
+        appObj = App.objects.get(id_app=int(row[0]))
 
-            schoolObj = School.objects.get_or_create(id_school=int(row[3]))[0]
+        exerObj = Exercise.objects.get_or_create(fk_app=appObj, id_exercise=int(row[5]),
+                                            scoremax_possible=int(row[7]))[0]
 
-            classObj = Classroom.objects.get_or_create(id_class=row[4], fk_school=schoolObj)[0]
+        schoolObj = School.objects.get_or_create(id_school=int(row[3]))[0]
 
-            # User.objects.get_or_create(id_student=int(row[2]), school=schoolOjb, id_class=row[4])
-            # Stores primary key to use as foreign key in Score Insert
-            # User.objects.get_or_create(id_student=int(row[2]))
-            studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
+        classObj = Classroom.objects.get_or_create(id_class=row[4], fk_school=schoolObj)[0]
 
-            # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
-            s, _ = Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj)
-            #  Adds score to the Score obj
-            s.score = int(row[6])
-            s.save()
+        # User.objects.get_or_create(id_student=int(row[2]), school=schoolOjb, id_class=row[4])
+        # Stores primary key to use as foreign key in Score Insert
+        # User.objects.get_or_create(id_student=int(row[2]))
+        studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
+
+        # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
+        s, _ = Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj)
+        #  Adds score to the Score obj
+        s.score = int(row[6])
+        s.save()
 
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
-    connection.commit()
-    connection.close()
 
 
 def format_date(date):
