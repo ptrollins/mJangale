@@ -160,15 +160,9 @@ def handle_csv_upload(csvfile):
         studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
         print('2')
         # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
-        s, _ = Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj)
-        #  Adds score to the Score obj
-        print('3')
-        print('Score obj', s)
-        s.score = int(row[6])
-        print('Results pre db', s.score)
-        s.save()
-        s = Score(id=s.id)
-        print('Results from db', s.score)
+
+        Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
+
 
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
