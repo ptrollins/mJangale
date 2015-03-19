@@ -162,7 +162,7 @@ def handle_csv_upload(csvfile):
         try:
             Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
         except IntegrityError:
-            pass
+            Score.objects.filter(date=formatted_date, fk_student=studObj, fk_exercise=exerObj).update(score=(int(row[6])))
 
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
