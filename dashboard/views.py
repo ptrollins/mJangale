@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
@@ -9,7 +8,7 @@ from django.core.context_processors import csrf  # For form POST security CSRF t
 from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.db import IntegrityError
 
 
 def index(request):
@@ -160,9 +159,10 @@ def handle_csv_upload(csvfile):
         studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
         print('2')
         # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
-
-        Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
-
+        try:
+            Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
+        except IntegrityError:
+            pass
 
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
