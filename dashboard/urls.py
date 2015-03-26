@@ -11,6 +11,9 @@ urlpatterns = patterns('',
     url(r'^dashboard', 'dashboard.views.dashboard'),
     url(r'^usage', 'dashboard.views.usage'),
     url(r'^scores', 'dashboard.views.scores'),
-    url(r'^class', 'dashboard.views.classes'),
+    url(r'^classes', 'dashboard.views.classes'),
     url(r'^upload$', 'dashboard.views.upload_file'),
+    url(r'^api/student/(?P<student_id>[0-9]{1,10})/?$', 'dashboard.views.display_student_score')
 )
+
+# /api/student/4

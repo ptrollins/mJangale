@@ -1,14 +1,14 @@
 {%  extends "template.html" %}
 {% block content %}
-
-    {% load static %}
-    <div class="square sq-single" >
-        <div class='float_left'>
-        <img src="{% static "media/mjangale_students300x400.png" %}" alt="Senegal children using mobile app" />
+    <content class="mainContent" id="mainContent">
+        {% load static %}
+        <div class="square sq-single" >
+            <div class='float_left'>
+            <img src="{% static "media/mjangale_students300x400.png" %}" alt="Senegal children using mobile app" />
+            </div>
+            <div class='float_left'>
+                <h4>Welcome to the mJangale Data Dashboard</h4>
+            </div>
         </div>
-        <div class='float_left'>
-            <h4>Welcome to the mJangale Data Dashboard</h4>
-        </div>
-    </div>
-
+    </content>
 {% endblock %}

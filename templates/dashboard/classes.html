@@ -1,0 +1,69 @@
+{% extends "template.html" %}
+{% load i18n %}
+{% block content %}
+    <content class="mainContent class" id="mainContent">
+    {% if user.is_authenticated %}
+        <div class="container">
+            <h3>Select:</h3>
+            <form action='classes' method='post' enctype="multipart/form-data" class="form-inline"> {% csrf_token %}
+            {{ form }}
+            <input type="submit" value={% trans "Display Scores" %}>
+            </form>
+        </div>
+        <div class="square" id="students">
+            <h2>Students</h2>
+            <p>
+                {% if students %}
+                    <ul>
+                        {% for student in students %}
+                            <li><a href="#" onclick="getGraphData({{ student.id }})">Student: {{ student.id_student }}</a>,
+                                Class: {{ student.fk_class.id_class }},
+                                School: {{ student.fk_class.fk_school.id_school }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <strong>There are no students present.</strong>
+                {% endif %}
+            </p>
+        </div>
+        <div class="square" id="scores">
+            <h2>Scores</h2>
+            <p>
+                <ul id="scorelist">
+                    <li>Select a student to display scores.</li>
+                </ul>
+            </p>
+        </div>
+
+
+        <script>
+        var x = document.getElementsByClassName("square")
+        var i;
+        for (i = 0; i < x.length; i++) {
+            x[i].style.visibility = '{{ visibility }}';
+            }
+        function getGraphData(studentID) {
+            var request = new XMLHttpRequest();
+            request.open('GET', '/dashboard/api/student/' + studentID, true);
+            request.onload = function () {
+                var graphData = JSON.parse(request.responseText);
+                console.log(graphData)
+                $('#scorelist').empty()
+                for (i = 0; i < graphData.scores.length; i++) {
+                    $('#scorelist').append('<li>' + graphData.scores[i].score + '</li>')
+                }
+                //window.myBar.update(graphData.data)
+            };
+
+            request.onerror = function () {
+                return;
+            };
+            request.send()
+        }
+        </script>
+
+    {% else %}
+        <a href="admin">Login</a>
+    {% endif %}
+    </content>
+{% endblock %}

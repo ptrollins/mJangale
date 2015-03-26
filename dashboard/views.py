@@ -2,7 +2,7 @@ from dashboard.models import Score, Exercise, App, User, School, Classroom, Stud
 import csv  # for CSV parser
 import sqlite3  # for DB
 from .forms import UploadFileForm, ChooseClassForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response, RequestContext
 from django.core.context_processors import csrf  # For form POST security CSRF token
 from django.contrib import auth  #for authentication
@@ -21,8 +21,13 @@ def dashboard(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
-    scores_list = Score.objects.order_by("date")
+    app_list = App.objects.values('name_app')
+    app_count = App.objects.count()
     class_list = Classroom.objects.values("id_class")
+    class_count = Classroom.objects.count()
+
+
+    scores_list = Score.objects.order_by("date")
     scores_per_class = []
     for c in class_list:
         id = c['id_class']
@@ -35,9 +40,9 @@ def dashboard(request):
     # students_list = User.objects.exclude(id_student__isnull=True)
     students_list = Student.objects.order_by("id_student")
     exercises_list = Exercise.objects.order_by("fk_app__id_app")
-    app_list = App.objects.values('name_app')
+
     context_dict = {"student": students_list, "exercise": exercises_list, "score": scores_list, "app_name": app_list,
-        "scores_per_class": scores_per_class}
+        "scores_per_class": scores_per_class, "title": 'Dashboard'}
 
     return render_to_response('dashboard/dashboard.html', context_dict, context)
 
@@ -47,7 +52,7 @@ def usage(request):
     score_list = Score.objects.values_list('score', flat=True)
     c = Classroom.objects.all()
     date_list = Score.objects.filter(student__fk_class=c).date.month
-    context_dict = {"score": score_list}
+    context_dict = {"score": score_list, "title": 'Usage'}
 
     '''for app in App
         {SELECT COUNT FROM dashboard_score WHERE strftime('%m','date')='02' AND score.exercise.id_app=app}'''
@@ -78,7 +83,8 @@ def scores(request):
     scores_list = Score.objects.order_by("fk_exercise__id_exercise")
     # score_list = [s.score for s in Score.objects.all()]
     # {'score_list': [student_score.score for student_score in Score.objects.get(student__id=3)]}
-    context_dict = {"score": scores_list, "c_scorecount": calc_count_list, "l_scorecount": lire_count_list}
+    context_dict = {"score": scores_list, "c_scorecount": calc_count_list, "l_scorecount": lire_count_list,
+                    "title": 'Scores'}
 
     # Render the response and send it back!
     return render_to_response('dashboard/scores.html', context_dict, context)
@@ -89,29 +95,45 @@ def classes(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
-    args = {}
-    args.update(csrf(request))
-    #  When button is clicked method is POST so file is uploaded with request.FILES
+    context_dict = {}
+    # args.update(csrf(request))
+    # When button is clicked method is POST so file is uploaded with request.FILES
     if request.method == 'POST':
         form = ChooseClassForm(request.POST)
-        args['form'] = form
+        context_dict['form'] = form
 
         cid = request.POST.get('class_id')
         # Query the database for a list of ALL students currently stored.
         # Place the list in our context_dict dictionary which will be passed to the template engine.
-        students_list = Student.objects.order_by("id_student")
-        class_list = Classroom.objects.values("id_class")
+        students_list = Student.objects.filter(fk_class__id_class=cid).order_by("id_student")
+        scores_list = Score.objects.filter(fk_student__fk_class__id_class=cid).values('score')
 
-        args.update({"student": students_list, "class_list": class_list})
+        context_dict.update({"students": students_list, "scores": scores_list, "title": 'Classes',
+                             "visibility": 'visible'})
 
         if form.is_valid():
 
-            return HttpResponseRedirect('classes')
-    # First time on the page method is GET so form is rendered on class.html
+            return render_to_response('dashboard/classes.html', context_dict, context)
+    # First time on the page method is GET so form is rendered on classes.html
     else:
         form = ChooseClassForm
-        args['form'] = form
-    return render_to_response('dashboard/class.html', args, context)
+        context_dict['form'] = form
+        context_dict.update({"title": 'Classes', "visibility": 'hidden'})
+    return render_to_response('dashboard/classes.html', context_dict, context)
+
+@staff_member_required
+def display_student_score(request, student_id):
+    # Obtain the context from the HTTP request.
+
+    scoresobj = Score.objects.filter(fk_student_id=student_id).values('score')
+    scores
+    scores_list=list()
+    context_dict = {}
+    context_dict.update({"title": 'Classes', "scores": scores}, "")
+
+
+
+    return JsonResponse(context_dict)
 
 
 def upload_file(request):
@@ -131,6 +153,7 @@ def upload_file(request):
     else:
         form = UploadFileForm()
         args['form'] = form
+        args.update({"title": 'Upload'})
     return render_to_response('dashboard/upload.html', args, context)
 
 
@@ -152,12 +175,11 @@ def handle_csv_upload(csvfile):
         schoolObj = School.objects.get_or_create(id_school=int(row[3]))[0]
 
         classObj = Classroom.objects.get_or_create(id_class=row[4], fk_school=schoolObj)[0]
-        print('1')
+
         # User.objects.get_or_create(id_student=int(row[2]), school=schoolOjb, id_class=row[4])
         # Stores primary key to use as foreign key in Score Insert
         # User.objects.get_or_create(id_student=int(row[2]))
         studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
-        print('2')
         # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
         try:
             Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
@@ -169,7 +191,7 @@ def handle_csv_upload(csvfile):
 
 
 def format_date(date):
-    # Converts cvs date 'dim jan 11 08:05:30 GMT 2015' to SQLite date format '2015-01-11 08:05:30.000'
+    # Converts cvs date 'dim jan 11 08:05:30 GMT 2015' to database date format '2015-01-11 08:05:30.000'
     upper_date = date.upper()
     date_list = upper_date.split()
     month = monthToNum(date_list[1])
@@ -230,6 +252,3 @@ def invalid_login(request):
 def logout(request):
     auth.logout(request)
     return render_to_response('logout.html')
-
-
-

@@ -61,15 +61,15 @@ main {
   *zoom: 1;
 }
 /* line 51, ../sass/screen.scss */
-main a {
+.mainContent a {
   text-decoration: none;
 }
 /* line 55, ../sass/screen.scss */
-main a:link, main a:visited {
-  color: #2CF9F9;
+.mainContent a:link, main a:visited {
+  color: #d30606;
 }
 /* line 58, ../sass/screen.scss */
-main a:hover, main a:active {
+.mainContent a:hover, main a:active {
   color: #797979;
 }
 

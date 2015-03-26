@@ -1,19 +1,21 @@
 {% extends "template.html" %}
 {% load i18n %}
 {% block content %}
-    {% if user.is_authenticated %}
-    <div class="square sqsingle" >
-        <h2>{% trans Upload %}</h2>
+    <content class="mainContent upload" id="mainContent">
+        {% if user.is_authenticated %}
+        <div class="square sqsingle" >
+            <h2>{% trans Upload %}</h2>
 
-            <form action='upload' method='post' enctype="multipart/form-data"> {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value={% trans "Upload" %}>
-            </form>
-        <p>
-            <a href=display>Display</a>
-        </p>
-    </div>
-    {% else %}
-        <a href="admin">Login</a>
-    {% endif %}
+                <form action='upload' method='post' enctype="multipart/form-data"> {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value={% trans "Upload" %}>
+                </form>
+            <p>
+                <a href=display>Display</a>
+            </p>
+        </div>
+        {% else %}
+            <a href="admin">Login</a>
+        {% endif %}
+    </content>
 {% endblock %}

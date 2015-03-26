@@ -1,5 +1,6 @@
 {% extends "template.html" %}
 {% block content %}
+    <content class="mainContent usage" id="mainContent">
     {% if user.is_authenticated %}
         <div class="mainContent">
             <div class="container">
@@ -72,4 +73,5 @@
     {% else %}
         <a href="admin">Login</a>
     {% endif %}
+    </content>
 {% endblock %}

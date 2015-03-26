@@ -45,6 +45,7 @@ class Classroom(models.Model):
 
 
 class Student(models.Model):
+    # id
     id_student = models.PositiveSmallIntegerField()
     fk_class = models.ForeignKey(Classroom)
 

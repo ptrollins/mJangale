@@ -1,5 +1,6 @@
 {%  extends "template.html" %}
 {% block content %}
+    <content class="mainContent scores" id="mainContent">
     {% if user.is_authenticated %}
     <div class="square">
         <h2>Scores</h2>
@@ -94,4 +95,5 @@
     {% else %}
         <a href="admin">Login</a>
     {% endif %}
+    </content>
 {% endblock %}
