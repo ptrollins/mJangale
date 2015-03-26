@@ -27,7 +27,7 @@
             </p>
         </div>
         <div class="square" id="scores">
-            <h2>Scores</h2>
+            <h2 id="scoretitle">Scores</h2>
             <p>
                 <ul id="scorelist">
                     <li>Select a student to display scores.</li>
@@ -47,12 +47,12 @@
             request.open('GET', '/dashboard/api/student/' + studentID, true);
             request.onload = function () {
                 var graphData = JSON.parse(request.responseText);
-                console.log(graphData)
-                $('#scorelist').empty()
+                console.log(graphData);
+                $('#scorelist').empty();
                 for (i = 0; i < graphData.scores.length; i++) {
                     $('#scorelist').append('<li>' + graphData.scores[i].score + '</li>')
                 }
-                //window.myBar.update(graphData.data)
+                $('#scoretitle').text('Student ' + graphData.studname[0].id_student + ' Scores')
             };
 
             request.onerror = function () {

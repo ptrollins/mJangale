@@ -125,13 +125,12 @@ def classes(request):
 def display_student_score(request, student_id):
     # Obtain the context from the HTTP request.
 
-    scoresobj = Score.objects.filter(fk_student_id=student_id).values('score')
-    scores
-    scores_list=list()
+    scores_list = Score.objects.filter(fk_student_id=student_id).values('score')
+    scores_list = list(scores_list)
+    studname = Student.objects.filter(id=student_id).values('id_student')
+    studname = list(studname)
     context_dict = {}
-    context_dict.update({"title": 'Classes', "scores": scores}, "")
-
-
+    context_dict.update({"title": 'Classes', "scores": scores_list, "studname": studname})
 
     return JsonResponse(context_dict)
 
