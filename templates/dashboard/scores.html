@@ -2,96 +2,31 @@
 {% block content %}
     <content class="mainContent scores" id="mainContent">
     {% if user.is_authenticated %}
-    <div class="square">
-        <h2>Scores</h2>
-        <p>
-            {% if score %}
-                <ul>
+        <div class="square">
+            <h2>Scores</h2>
+            <p>
+                {% if score %}
+                    <table border="1" width="100%">
+                        <tr>
+                            <th>Exercise</th>
+                            <th>Score</th>
+                            <th>Student</th>
+                            <th>Date</th>
+                        </tr>
                     {% for scores in score %}
-                        <li>Exercise: {{ scores.fk_exercise.id_exercise }}, Student: {{ scores.fk_student.id_student }},
-                            Date: {{ scores.date }}, Score: {{ scores.score }}</li>
+                        <tr>
+                            <th>{{ scores.fk_exercise.id_exercise }}</th>
+                            <th>{{ scores.score }}</th>
+                            <th>{{ scores.fk_student.id_student }}</th>
+                            <th>{{ scores.date|date:'d-m-Y'}}</th>
+                        </tr>
                     {% endfor %}
-                </ul>
-            {% else %}
-                <strong>There are no score present.</strong>
-            {% endif %}
-        </p>
-    </div>
-
-        <div class="square">
-            <h3>CalculerAuCE1 Exercise Usage</h3>
-            <canvas id="doughnutchart1" width="250" height="250" style="width: 250px; height: 250px;"></canvas>
-            <ul class="doughnut-legend">
-                {%  for id, count, lbcolor in c_scorecount %}
-                    <li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
-                {% endfor %}
-            </ul>
+                    </table>
+                {% else %}
+                    <strong>There are no score present.</strong>
+                {% endif %}
+            </p>
         </div>
-        <div class="square">
-            <h3>LireAuCE1 Exercise Usage</h3>
-            <canvas id="doughnutchart2" width="250" height="250" style="width: 250px; height: 250px;"></canvas>
-            <ul class="doughnut-legend">
-                {%  for id, count, lbcolor in l_scorecount %}
-                    <li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <script>
-        var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-        var barChartData = {
-            labels : ["January","February","March","April","May","June","July","August","September","October","November","December"],
-            datasets : [
-                {
-                    fillColor : "rgba(220,220,220,0.5)",
-                    strokeColor : "rgba(220,220,220,0.8)",
-                    highlightFill: "rgba(220,220,220,0.75)",
-                    highlightStroke: "rgba(220,220,220,1)",
-                    data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
-                        randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
-                        randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-                },
-                {
-                    fillColor : "rgba(151,187,205,0.5)",
-                    strokeColor : "rgba(151,187,205,0.8)",
-                    highlightFill : "rgba(151,187,205,0.75)",
-                    highlightStroke : "rgba(151,187,205,1)",
-                    data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
-                        randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
-                        randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-                }
-            ]
-        };
-        window.onload = function(){
-            var ctx = document.getElementById("doughnutchart1").getContext("2d");
-            window.myDoughnut = new Chart(ctx).Doughnut(pieData1, {
-                animateRotate : true
-            });
-            var ctx1 = document.getElementById("doughnutchart2").getContext("2d");
-            window.myDoughnut = new Chart(ctx1).Doughnut(pieData2, {
-                animateRotate : true
-            });
-        }
-
-        var pieData1 = [
-            {%  for id, count, lbcolor in c_scorecount %}
-            {
-                value: {{ count }},
-                color: "{{ lbcolor }}",
-                label: "Exercise {{ id }} times used"
-            },
-            {% endfor %}];
-
-        var pieData2 = [
-            {%  for id, count, lbcolor in l_scorecount %}
-            {
-                value: {{ count }},
-                color: "{{ lbcolor }}",
-                label: "Exercise {{ id }} times used"
-            },
-            {% endfor %}];
-
-        </script>
     {% else %}
         <a href="admin">Login</a>
     {% endif %}

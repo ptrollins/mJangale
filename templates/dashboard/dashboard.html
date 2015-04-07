@@ -3,12 +3,12 @@
     <content class="mainContent dashboard" id="mainContent">
     {% if user.is_authenticated %}
         <div class="square">
-            <h2>Score Count</h2>
+            <h2>Scores per Exercise</h2>
             <p>
                 {% if scores_per_class %}
                     <ul>
                         {% for x, y in scores_per_class%}
-                            <li>{{  x }} Count: {{ y }}</li>
+                            <li>Exercise: {{  x }}, Count: {{ y }}</li>
                         {% endfor %}
                     </ul>
                 {% else %}
@@ -17,12 +17,12 @@
             </p>
         </div>
         <div class="square">
-            <h2>Exercises</h2>
+            <h2>Exercises Used</h2>
             <p>
                 {% if exercise %}
                     <ul>
                         {% for exercises in exercise %}
-                            <li>App: {{ exercises.app.name_app }}, Exercise: {{ exercises.id_exercise }},
+                            <li>{{ exercises.fk_app__name_app }}, Exercise: {{ exercises.id_exercise }},
                                 Max Score: {{ exercises.scoremax_possible }}</li>
                         {% endfor %}
                     </ul>

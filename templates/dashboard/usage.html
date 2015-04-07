@@ -35,41 +35,92 @@
               </form>
             </div>
         </div>
+
         <div class="square">
-            <canvas id="canvas" height="450" width="600"></canvas>
+            <h3>CalculerAuCE1 Exercise Usage</h3>
+            <canvas id="doughnutchart1" width="250" height="250"></canvas>
+            <ul class="doughnut-legend">
+                {%  for id, count, lbcolor in c_scorecount %}
+                    <li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
+                {% endfor %}
+            </ul>
         </div>
 
+        <div class="square">
+            <h3>LireAuCE1 Exercise Usage</h3>
+            <canvas id="doughnutchart2" width="250" height="250"></canvas>
+            <ul class="doughnut-legend">
+                {%  for id, count, lbcolor in l_scorecount %}
+                    <li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="square sqsingle">
+            <canvas id="canvas" width="250" height="150"></canvas>
+        </div>
 
         <script>
-        var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-        var barChartData = {
-            labels : ["February","March","April","May"],
-            datasets : [
+            window.onload = function(){
+                var ctx = document.getElementById("doughnutchart1").getContext("2d");
+                window.myDoughnut = new Chart(ctx).Doughnut(pieData1, {
+                    animateRotate : true
+                });
+                var ctx1 = document.getElementById("doughnutchart2").getContext("2d");
+                window.myDoughnut = new Chart(ctx1).Doughnut(pieData2, {
+                    animateRotate : true
+                });
+                var ctx = document.getElementById("canvas").getContext("2d");
+                window.myBar = new Chart(ctx).Bar(barChartData, {
+                    responsive: true
+                });
+            }
+
+            var pieData1 = [
+                {%  for id, count, lbcolor in c_scorecount %}
                 {
-                    fillColor : "rgba(220,220,220,0.5)",
-                    strokeColor : "rgba(220,220,220,0.8)",
-                    highlightFill: "rgba(220,220,220,0.75)",
-                    highlightStroke: "rgba(220,220,220,1)",
-                     data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
-                            randomScalingFactor()]
+                    value: {{ count }},
+                    color: "{{ lbcolor }}",
+                    label: "Exercise {{ id }} times used"
                 },
+                {% endfor %}];
+
+            var pieData2 = [
+                {%  for id, count, lbcolor in l_scorecount %}
                 {
-                    fillColor : "rgba(151,187,205,0.5)",
-                    strokeColor : "rgba(151,187,205,0.8)",
-                    highlightFill : "rgba(151,187,205,0.75)",
-                    highlightStroke : "rgba(151,187,205,1)",
-                     data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                    value: {{ count }},
+                    color: "{{ lbcolor }}",
+                    label: "Exercise {{ id }} times used"
+                },
+                {% endfor %}];
+            var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+            var barChartData = {
+                labels : ["January","February","March","April","May","June","July","August","September","October","November","December"],
+                datasets : [
+                    {
+                        fillColor : "rgba(220,220,220,0.5)",
+                        strokeColor : "rgba(220,220,220,0.8)",
+                        highlightFill: "rgba(220,220,220,0.75)",
+                        highlightStroke: "rgba(220,220,220,1)",
+                        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
                             randomScalingFactor()]
-                }
-            ]
-        };
-        window.onload = function(){
-            var ctx = document.getElementById("canvas").getContext("2d");
-            window.myBar = new Chart(ctx).Bar(barChartData, {
-                responsive : true
-            });
-        }
+                    },
+                    {
+                        fillColor : "rgba(151,187,205,0.5)",
+                        strokeColor : "rgba(151,187,205,0.8)",
+                        highlightFill : "rgba(151,187,205,0.75)",
+                        highlightStroke : "rgba(151,187,205,1)",
+                        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),
+                            randomScalingFactor()]
+                    }
+                ]
+            };
         </script>
+
     {% else %}
         <a href="admin">Login</a>
     {% endif %}

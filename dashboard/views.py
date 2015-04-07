@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
@@ -25,7 +26,9 @@ def dashboard(request):
     app_count = App.objects.count()
     class_list = Classroom.objects.values("id_class")
     class_count = Classroom.objects.count()
-
+    student_count = Student.objects.count()
+    math_avg = Score.objects.filter(fk_exercise__fk_app__id_app=1).aggregate(Avg('score'))
+    read_avg = Score.objects.filter(fk_exercise__fk_app__id_app=2).aggregate(Avg('score'))
 
     scores_list = Score.objects.order_by("date")
     scores_per_class = []
@@ -39,20 +42,44 @@ def dashboard(request):
     # Place the list in our context_dict dictionary which will be passed to the template engine.
     # students_list = User.objects.exclude(id_student__isnull=True)
     students_list = Student.objects.order_by("id_student")
-    exercises_list = Exercise.objects.order_by("fk_app__id_app")
+    exercises_list = Exercise.objects.values('id_exercise', 'scoremax_possible', 'fk_app__name_app')\
+        .order_by("fk_app__id_app")
+    exercises_list = list(exercises_list)
 
-    context_dict = {"student": students_list, "exercise": exercises_list, "score": scores_list, "app_name": app_list,
-        "scores_per_class": scores_per_class, "title": 'Dashboard'}
+    context_dict = {"student": students_list, "student_count": student_count, "exercise": exercises_list,
+        "score": scores_list, "app_name": app_list, "app_count": app_count, "class_count": class_count,
+        "scores_per_class": scores_per_class, "math_avg": math_avg, "read_avg": read_avg, "title": 'Dashboard'}
 
     return render_to_response('dashboard/dashboard.html', context_dict, context)
 
 
 def usage(request):
     context = RequestContext(request)
+
+    calc_count_list = []
+    lire_count_list = []
+    colordict = {'1': '#40af49', '2': '#ac558a', '3': '#f05541', '4': '#3ac2d0', '5': '#faaf3c', '6': '#4287b0'}
+
+    # make list of lists to make number of charts dynamic
+    calc_list = Exercise.objects.filter(fk_app__id_app=1).order_by("id_exercise")
+    for cl in calc_list:
+        sc = Score.objects.filter(fk_exercise__id_exercise=cl.id_exercise).count()
+        calc_count_list.append((cl.id_exercise, sc, colordict[str(cl.id_exercise)]))
+
+    lire_list = Exercise.objects.filter(fk_app__id_app=2).order_by("id_exercise")
+    for ll in lire_list:
+        sc = Score.objects.filter(fk_exercise__id_exercise=ll.id_exercise).count()
+        lire_count_list.append((ll.id_exercise, sc, colordict[str(ll.id_exercise)]))
+
     score_list = Score.objects.values_list('score', flat=True)
-    c = Classroom.objects.all()
-    date_list = Score.objects.filter(student__fk_class=c).date.month
-    context_dict = {"score": score_list, "title": 'Usage'}
+    class_list = Classroom.objects.all()
+    score_month = []
+    for c in class_list:
+        score_ojb_list = Score.objects.filter(fk_student__fk_class=c)
+        for s in score_ojb_list:
+            score_month.append(s.date.month)
+    context_dict = {"score": score_list, "c_scorecount": calc_count_list, "l_scorecount": lire_count_list,
+                    "title": 'Usage', "score_month": score_month}
 
     '''for app in App
         {SELECT COUNT FROM dashboard_score WHERE strftime('%m','date')='02' AND score.exercise.id_app=app}'''
@@ -64,27 +91,12 @@ def scores(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
-    calc_count_list = []
-    lire_count_list = []
-    colordict = {'1': '#40af49', '2': '#ac558a', '3': '#f05541', '4': '#3ac2d0', '5': '#faaf3c', '6': '#4287b0'}
-    # for a in id_app_list   # make list of lists to make number of charts dynamic
-    calc_list = Exercise.objects.filter(fk_app__id_app=1).order_by("id_exercise")
-    for cl in calc_list:
-        sc = Score.objects.filter(fk_exercise__id_exercise=cl.id_exercise).count()
-        calc_count_list.append((cl.id_exercise, sc, colordict[str(cl.id_exercise)]))
-
-    lire_list = Exercise.objects.filter(fk_app__id_app=2).order_by("id_exercise")
-    for ll in lire_list:
-        sc = Score.objects.filter(fk_exercise__id_exercise=ll.id_exercise).count()
-        lire_count_list.append((ll.id_exercise, sc, colordict[str(ll.id_exercise)]))
-
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
     scores_list = Score.objects.order_by("fk_exercise__id_exercise")
     # score_list = [s.score for s in Score.objects.all()]
     # {'score_list': [student_score.score for student_score in Score.objects.get(student__id=3)]}
-    context_dict = {"score": scores_list, "c_scorecount": calc_count_list, "l_scorecount": lire_count_list,
-                    "title": 'Scores'}
+    context_dict = {"score": scores_list, "title": 'Scores'}
 
     # Render the response and send it back!
     return render_to_response('dashboard/scores.html', context_dict, context)
@@ -106,10 +118,8 @@ def classes(request):
         # Query the database for a list of ALL students currently stored.
         # Place the list in our context_dict dictionary which will be passed to the template engine.
         students_list = Student.objects.filter(fk_class__id_class=cid).order_by("id_student")
-        scores_list = Score.objects.filter(fk_student__fk_class__id_class=cid).values('score')
 
-        context_dict.update({"students": students_list, "scores": scores_list, "title": 'Classes',
-                             "visibility": 'visible'})
+        context_dict.update({"students": students_list, "title": 'Classes', "visibility": 'visible'})
 
         if form.is_valid():
 
@@ -125,7 +135,8 @@ def classes(request):
 def display_student_score(request, student_id):
     # Obtain the context from the HTTP request.
 
-    scores_list = Score.objects.filter(fk_student_id=student_id).values('score')
+    scores_list = Score.objects.filter(fk_student_id=student_id).values('score', 'fk_exercise__scoremax_possible',
+                                    'date', 'fk_exercise__id_exercise').order_by('fk_exercise__id_exercise', '-date')
     scores_list = list(scores_list)
     studname = Student.objects.filter(id=student_id).values('id_student')
     studname = list(studname)

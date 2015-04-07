@@ -44,13 +44,25 @@
             }
         function getGraphData(studentID) {
             var request = new XMLHttpRequest();
+            var date;
+            var day;
+            var month;
+            var year;
             request.open('GET', '/dashboard/api/student/' + studentID, true);
             request.onload = function () {
                 var graphData = JSON.parse(request.responseText);
                 console.log(graphData);
                 $('#scorelist').empty();
                 for (i = 0; i < graphData.scores.length; i++) {
-                    $('#scorelist').append('<li>' + graphData.scores[i].score + '</li>')
+                    date = new Date(graphData.scores[i].date);
+                    year = date.getFullYear();
+                    month = date.getMonth();
+                    day = date.getDate();
+                    $('#scorelist').append('<li>' + 'Exercise:' + graphData.scores[i].fk_exercise__id_exercise +
+                        ', Score: ' + graphData.scores[i].score + ' of ' +
+                        graphData.scores[i].fk_exercise__scoremax_possible + ',  ' +
+                        day + '/' + month + '/' + year + '</li>')
+                    console.log(graphData)
                 }
                 $('#scoretitle').text('Student ' + graphData.studname[0].id_student + ' Scores')
             };
