@@ -22,8 +22,9 @@ def dashboard(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
-    monthdict = {'01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
-                 '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'}
+    monthdict = {'01': 'Jan', '1': 'Jan', '02': 'Feb', '2': 'Feb', '03': 'Mar', '3': 'Mar', '04': 'Apr', '4': 'Apr',
+                 '05': 'May', '5': 'May', '06': 'Jun', '6': 'Jun', '07': 'Jul', '7': 'Jul', '08': 'Aug', '8': 'Aug',
+                 '09': 'Sep', '9': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'}
 
     app_list = App.objects.values('name_app')
     app_count = App.objects.count()
@@ -46,9 +47,9 @@ def dashboard(request):
     if connection.vendor == 'sqlite':
         selectyear = 'strftime("%Y", date)'
         selectmonth = 'strftime("%m", date)'
-    else:
-        selectyear = 'EXTRACT(year FROM date)'
-        selectmonth = 'EXTRACT(month FROM date)'
+    elif connection.vendor == 'postresql':
+        selectyear = 'extract( year from date )'
+        selectmonth = 'extract( month from date )'
     # adds a year, month and total column to math_score_obj as ms queryset
     ms = math_score_obj.extra(select={'year': selectyear, 'month': selectmonth})\
         .annotate(total=Count('score')).order_by('year', 'month')
