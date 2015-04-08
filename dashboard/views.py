@@ -47,7 +47,7 @@ def dashboard(request):
     if connection.vendor == 'sqlite':
         selectyear = 'strftime("%Y", date)'
         selectmonth = 'strftime("%m", date)'
-    elif connection.vendor == 'postresql':
+    else:
         selectyear = 'extract( year from date )'
         selectmonth = 'extract( month from date )'
     # adds a year, month and total column to math_score_obj as ms queryset
