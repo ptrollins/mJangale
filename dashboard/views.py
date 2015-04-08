@@ -9,7 +9,7 @@ from django.core.context_processors import csrf  # For form POST security CSRF t
 from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db import IntegrityError
+from django.db import IntegrityError, connection
 
 
 def index(request):
@@ -21,6 +21,9 @@ def index(request):
 def dashboard(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
+
+    monthdict = {'01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
+                 '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'}
 
     app_list = App.objects.values('name_app')
     app_count = App.objects.count()
@@ -39,14 +42,24 @@ def dashboard(request):
         # Score.objects.filter(Class=c).count()
         scores_per_class.append((id, count))
 
-    # id_app, count, month
-    # adds a yearmonth (Y-m) and total column to math_score_obj as ms queryset
-    # todo change select to postgresql extract?
-    ms = math_score_obj.extra(select={'yearmonth': 'strftime("%Y-%m", date)'}).annotate(total=Count('score'))
-    # groups ms queryset by yearmonth
-    ms.query.group_by = ['yearmonth']
-    # returns list of totals for each yearmonth
-    scorecount_month = ms.values('total', 'yearmonth')
+    # IF checks database type to match up correct select statement
+    if connection.vendor == 'sqlite':
+        selectyear = 'strftime("%Y", date)'
+        selectmonth = 'strftime("%m", date)'
+    elif connection.vendor == 'postresql':
+        selectyear = 'EXTRACT(year FROM date)'
+        selectmonth = 'EXTRACT(month FROM date)'
+    # adds a year, month and total column to math_score_obj as ms queryset
+    ms = math_score_obj.extra(select={'year': selectyear, 'month': selectmonth})\
+        .annotate(total=Count('score')).order_by('year', 'month')
+    # groups ms queryset by year and month
+    ms.query.group_by = ['year', 'month']
+    # returns list of totals for each year and month
+    scorecount_month = ms.values('total', 'year', 'month')
+
+    for sc in scorecount_month:
+        monthnum = sc['month']
+        sc['month'] = monthdict[monthnum]
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
