@@ -51,7 +51,7 @@ def dashboard(request):
     if connection.vendor == 'sqlite':
         selectyear = 'strftime("%Y", date)'
         selectmonth = 'strftime("%m", date)'
-    else:
+    else:  # if connection.vendor == 'postgresql':
         selectyear = 'extract( year from date )'
         selectmonth = 'extract( month from date )'
     # adds a year, month and total column to math_score_obj as ms queryset
@@ -64,7 +64,8 @@ def dashboard(request):
 
     for sc in scorecount_month:
         monthnum = sc['month']
-        sc['month'] = monthdict[monthnum]
+        sc['month'] = monthnum
+        # sc['month'] = monthdict[monthnum]
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
