@@ -60,7 +60,8 @@ def dashboard(request):
 
     for sc in scorecount_month:
         monthnum = sc['month']
-        sc['month'] = monthdict[monthnum]
+        sc['month'] = monthnum
+        # sc['month'] = monthdict[monthnum]
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
