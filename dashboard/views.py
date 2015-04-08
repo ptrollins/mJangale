@@ -1,4 +1,4 @@
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
@@ -40,23 +40,23 @@ def dashboard(request):
         scores_per_class.append((id, count))
 
     # id_app, count, month
-    score_month = []
-    math_months = math_score_obj.datetimes('date', 'month').distinct()
-
-    for mm in math_months:
-        math_count = math_score_obj.filter()
-        score_month.append((mm.date, ))
+    # adds a yearmonth (Y-m) and total column to math_score_obj as ms queryset
+    # todo change select to postgresql extract?
+    ms = math_score_obj.extra(select={'yearmonth': 'strftime("%Y-%m", date)'}).annotate(total=Count('score'))
+    # groups ms queryset by yearmonth
+    ms.query.group_by = ['yearmonth']
+    # returns list of totals for each yearmonth
+    scorecount_month = ms.values('total', 'yearmonth')
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
-    # students_list = User.objects.exclude(id_student__isnull=True)
     students_list = Student.objects.order_by("id_student")
     exercises_list = Exercise.objects.values('id_exercise', 'scoremax_possible', 'fk_app__name_app')\
         .order_by("fk_app__id_app")
     exercises_list = list(exercises_list)
 
     context_dict = {"student": students_list, "student_count": student_count, "exercise": exercises_list,
-        "app_name": app_list, "app_count": app_count, "class_count": class_count,
+        "app_name": app_list, "app_count": app_count, "class_count": class_count, "scorecount_month": scorecount_month,
         "scores_per_class": scores_per_class, "math_avg": math_avg, "read_avg": read_avg, "title": 'Dashboard'}
 
     return render_to_response('dashboard/dashboard.html', context_dict, context)
