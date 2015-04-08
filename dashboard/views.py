@@ -22,9 +22,13 @@ def dashboard(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
-    monthdict = {'01': 'Jan', '1': 'Jan', '02': 'Feb', '2': 'Feb', '03': 'Mar', '3': 'Mar', '04': 'Apr', '4': 'Apr',
-                 '05': 'May', '5': 'May', '06': 'Jun', '6': 'Jun', '07': 'Jul', '7': 'Jul', '08': 'Aug', '8': 'Aug',
-                 '09': 'Sep', '9': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'}
+    # monthdict = {'01': 'Jan', '1.0': 'Jan', '02': 'Feb', '2.0': 'Feb', '03': 'Mar', '3.0': 'Mar', '04': 'Apr',
+                # '4.0': 'Apr', '05': 'May', '5.0': 'May', '06': 'Jun', '6.0': 'Jun', '07': 'Jul', '7.0': 'Jul',
+                # '08': 'Aug', '8.0': 'Aug', '09': 'Sep', '9.0': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
+                # '10.0': 'Oct', '11.0': 'Nov', '12.0': 'Dec'}
+    # decimal month for postgresql monthnum
+    monthdict = {'1.0': 'Jan', '2.0': 'Feb', '3.0': 'Mar', '4.0': 'Apr', '5.0': 'May', '6.0': 'Jun', '7.0': 'Jul',
+                 '8.0': 'Aug', '9.0': 'Sep', '10.0': 'Oct', '11.0': 'Nov', '12.0': 'Dec'}
 
     app_list = App.objects.values('name_app')
     app_count = App.objects.count()
@@ -60,8 +64,7 @@ def dashboard(request):
 
     for sc in scorecount_month:
         monthnum = sc['month']
-        sc['month'] = monthnum
-        # sc['month'] = monthdict[monthnum]
+        sc['month'] = monthdict[monthnum]
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
