@@ -6,3 +6,4 @@ static==1.1.1
 dj-static==0.0.6
 psycopg2==2.5.4
 django-registration-redux==1.1
+pytz==2015.2

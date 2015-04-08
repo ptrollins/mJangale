@@ -3,18 +3,16 @@
     <content class="mainContent dashboard" id="mainContent">
     {% if user.is_authenticated %}
         <div class="square">
-            <h2>Scores per Exercise</h2>
-            <p>
-                {% if scores_per_class %}
-                    <ul>
-                        {% for x, y in scores_per_class%}
-                            <li>Exercise: {{  x }}, Count: {{ y }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <strong>There are no students present.</strong>
-                {% endif %}
-            </p>
+            <h2>Exercises Completed per Class</h2>
+            {% if scores_per_class %}
+                <ul>
+                    {% for x, y in scores_per_class%}
+                        <li>Class ID: {{  x }}, Exercises Completed: {{ y }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>There are no students present.</strong>
+            {% endif %}
         </div>
         <div class="square">
             <h2>Exercises Used</h2>
@@ -22,8 +20,7 @@
                 {% if exercise %}
                     <ul>
                         {% for exercises in exercise %}
-                            <li>{{ exercises.fk_app__name_app }}, Exercise: {{ exercises.id_exercise }},
-                                Max Score: {{ exercises.scoremax_possible }}</li>
+                            <li>{{ exercises.fk_app__name_app }}, Exercise: {{ exercises.id_exercise }}</li>
                         {% endfor %}
                     </ul>
                 {% else %}
@@ -31,20 +28,13 @@
                 {% endif %}
             </p>
         </div>
+
         <div class="square">
-            <h2>Scores</h2>
-            <p>
-                {% if score %}
-                    <ul>
-                        {% for scores in score %}
-                            <li>Exercise: {{ scores.exercise.id_exercise }}, Student: {{ scores.student.id_student }},
-                                Date: {{ scores.date }}, Score: {{ scores.score }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <strong>There are no score present.</strong>
-                {% endif %}
-            </p>
+            <h2>Average Score by App</h2>
+            <ul>
+                <li>Calculer Avg: {{ math_avg.score__avg }}</li>
+                <li>Lire Avg: {{ read_avg.score__avg }}</li>
+            </ul>
         </div>
 
         <div class="square">

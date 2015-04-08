@@ -27,16 +27,25 @@ def dashboard(request):
     class_list = Classroom.objects.values("id_class")
     class_count = Classroom.objects.count()
     student_count = Student.objects.count()
-    math_avg = Score.objects.filter(fk_exercise__fk_app__id_app=1).aggregate(Avg('score'))
-    read_avg = Score.objects.filter(fk_exercise__fk_app__id_app=2).aggregate(Avg('score'))
+    math_score_obj = Score.objects.filter(fk_exercise__fk_app__id_app=1)
+    read_score_obj = Score.objects.filter(fk_exercise__fk_app__id_app=2)
+    math_avg = math_score_obj.aggregate(Avg('score'))
+    read_avg = read_score_obj.aggregate(Avg('score'))
 
-    scores_list = Score.objects.order_by("date")
     scores_per_class = []
     for c in class_list:
         id = c['id_class']
         count = Score.objects.filter(fk_student__fk_class__id_class=id).count()
         # Score.objects.filter(Class=c).count()
         scores_per_class.append((id, count))
+
+    # id_app, count, month
+    score_month = []
+    math_months = math_score_obj.datetimes('date', 'month').distinct()
+
+    for mm in math_months:
+        math_count = math_score_obj.filter()
+        score_month.append((mm.date, ))
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
@@ -47,7 +56,7 @@ def dashboard(request):
     exercises_list = list(exercises_list)
 
     context_dict = {"student": students_list, "student_count": student_count, "exercise": exercises_list,
-        "score": scores_list, "app_name": app_list, "app_count": app_count, "class_count": class_count,
+        "app_name": app_list, "app_count": app_count, "class_count": class_count,
         "scores_per_class": scores_per_class, "math_avg": math_avg, "read_avg": read_avg, "title": 'Dashboard'}
 
     return render_to_response('dashboard/dashboard.html', context_dict, context)
