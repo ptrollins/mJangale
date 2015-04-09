@@ -133,8 +133,7 @@ def classes(request):
     context = RequestContext(request)
 
     context_dict = {}
-    # args.update(csrf(request))
-    # When button is clicked method is POST so file is uploaded with request.FILES
+    # When button is clicked method is POST. The class ID is passed from form by request.POST
     if request.method == 'POST':
         form = ChooseClassForm(request.POST)
         context_dict['form'] = form
@@ -152,8 +151,8 @@ def classes(request):
     # First time on the page method is GET so form is rendered on classes.html
     else:
         form = ChooseClassForm
-        context_dict['form'] = form
-        context_dict.update({"title": 'Classes', "visibility": 'hidden'})
+        # context_dict['form'] = form
+        context_dict.update({"form": form, "title": 'Classes', "visibility": 'hidden'})
     return render_to_response('dashboard/classes.html', context_dict, context)
 
 @staff_member_required

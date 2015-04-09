@@ -8,7 +8,10 @@ class UploadFileForm(forms.Form):
 
 
 class ChooseClassForm(forms.Form):
-    class_id = forms.ModelChoiceField(Classroom.objects.values_list('id_class', flat=True), empty_label='Select Class')
+    # class_id = forms.ModelChoiceField(Classroom.objects.values_list('id_class', flat=True), empty_label='Select Class')
+    idquery = Classroom.objects.values_list('id_class', flat=True)
+    idquery_choices = [('', 'Select Class')] + [(id, id) for id in idquery]
+    class_id = forms.ChoiceField(idquery_choices, required=False, widget=forms.Select())
 
 
 class UserForm(forms.ModelForm):
