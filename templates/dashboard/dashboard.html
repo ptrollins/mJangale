@@ -34,6 +34,7 @@
             <ul>
                 <li>Calculer Avg: {{ math_avg.score__avg }}</li>
                 <li>Lire Avg: {{ read_avg.score__avg }}</li>
+                {% for sc in scorecount_month %}<li>{{ sc.total }}</li>{% endfor %}
             </ul>
         </div>
 
