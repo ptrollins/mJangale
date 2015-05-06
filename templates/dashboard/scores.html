@@ -15,6 +15,7 @@
                         </tr>
                     {% for scores in score %}
                         <tr>
+                            <th>{{ scores.fk_exercise.fk_app.name_app }}</th>
                             <th>{{ scores.fk_exercise.id_exercise }}</th>
                             <th>{{ scores.score }}</th>
                             <th>{{ scores.fk_student.id_student }}</th>

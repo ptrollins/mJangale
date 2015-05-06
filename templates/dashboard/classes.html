@@ -58,7 +58,8 @@
                     year = date.getFullYear();
                     month = date.getMonth();
                     day = date.getDate();
-                    $('#scorelist').append('<li>' + 'Exercise:' + graphData.scores[i].fk_exercise__id_exercise +
+                    $('#scorelist').append('<li>App:' + graphData.scores[i].fk_exercise__fk_app__name_app +
+                        ', Exercise:' + graphData.scores[i].fk_exercise__id_exercise +
                         ', Score: ' + graphData.scores[i].score + ' of ' +
                         graphData.scores[i].fk_exercise__scoremax_possible + ',  ' +
                         day + '/' + month + '/' + year + '</li>')

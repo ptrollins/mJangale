@@ -88,12 +88,12 @@ def usage(request):
     # make list of lists to make number of charts dynamic
     calc_list = Exercise.objects.filter(fk_app__id_app=1).order_by("id_exercise")
     for cl in calc_list:
-        sc = Score.objects.filter(fk_exercise__id_exercise=cl.id_exercise).count()
+        sc = Score.objects.filter(fk_exercise__id_exercise=cl.id_exercise, fk_exercise__fk_app__id_app=1).count()
         calc_count_list.append((cl.id_exercise, sc, colordict[str(cl.id_exercise)]))
 
     lire_list = Exercise.objects.filter(fk_app__id_app=2).order_by("id_exercise")
     for ll in lire_list:
-        sc = Score.objects.filter(fk_exercise__id_exercise=ll.id_exercise).count()
+        sc = Score.objects.filter(fk_exercise__id_exercise=ll.id_exercise, fk_exercise__fk_app__id_app=2).count()
         lire_count_list.append((ll.id_exercise, sc, colordict[str(ll.id_exercise)]))
 
     score_list = Score.objects.values_list('score', flat=True)
@@ -160,7 +160,8 @@ def display_student_score(request, student_id):
     # Obtain the context from the HTTP request.
 
     scores_list = Score.objects.filter(fk_student_id=student_id).values('score', 'fk_exercise__scoremax_possible',
-                                    'date', 'fk_exercise__id_exercise').order_by('fk_exercise__id_exercise', '-date')
+                                    'date', 'fk_exercise__id_exercise',
+                                    'fk_exercise__fk_app__name_app').order_by('fk_exercise__id_exercise', '-date')
     scores_list = list(scores_list)
     studname = Student.objects.filter(id=student_id).values('id_student')
     studname = list(studname)
