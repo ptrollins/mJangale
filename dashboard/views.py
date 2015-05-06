@@ -181,19 +181,22 @@ def upload_file(request):
         args['form'] = form
         if form.is_valid():
             # File is formatted Byte so is wrapped as utf-8 and passed to handler
-            handle_csv_upload(TextIOWrapper(request.FILES['file'].file, encoding='macroman'))
+            uploadCount = handle_csv_upload(TextIOWrapper(request.FILES['file'].file, encoding='macroman'))
             # After handler inserts into database, redirect calls page to display data
-            return HttpResponseRedirect('scores')
+            args.update({"title": 'Upload', "uploadSuccess": True, "uploadCount": uploadCount})
+            return render_to_response('dashboard/upload.html', args, context)
+            # return HttpResponseRedirect('scores')
     # First time on the page method is GET so form is rendered on upload.html
     else:
         form = UploadFileForm()
         args['form'] = form
-        args.update({"title": 'Upload'})
+        args.update({"title": 'Upload', "uploadSuccess": False})
     return render_to_response('dashboard/upload.html', args, context)
 
 
 def handle_csv_upload(csvfile):
     reader = csv.reader(csvfile)  # read the CSV file into a list of strings
+    count = 0
 
     for row in reader:  # for each row from the CSV format the data to correct data type and insert into database
         # 0 = id_app, 1 = date, 2 = id_student, 3 = id_school, 4 = id_class,
@@ -220,9 +223,10 @@ def handle_csv_upload(csvfile):
             Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
         except IntegrityError:
             Score.objects.filter(date=formatted_date, fk_student=studObj, fk_exercise=exerObj).update(score=(int(row[6])))
-
+        count += 1
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
+    return count
 
 
 def format_date(date):

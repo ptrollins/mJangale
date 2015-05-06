@@ -11,6 +11,11 @@
                 <input type="submit" value={% trans "Upload" %}>
                 </form>
         </div>
+            {% if uploadSuccess %}
+                <div class="square sqsingle">
+                    Upload successful! {{ uploadCount }} scores uploaded.
+                </div>
+            {% endif %}
         {% else %}
             <a href="admin">Login</a>
         {% endif %}
