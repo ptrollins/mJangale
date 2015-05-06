@@ -220,10 +220,12 @@ def handle_csv_upload(csvfile):
         studObj = Student.objects.get_or_create(id_student=int(row[2]), fk_class=classObj)[0]
         # Gets Score obj with date, student, and exercise if exists or adds it if it doesn't
         try:
-            Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj, score=(int(row[6])))
+            s, created = Score.objects.get_or_create(date=formatted_date, fk_student=studObj, fk_exercise=exerObj,
+                                                     score=(int(row[6])))
+            if created:
+                count += 1
         except IntegrityError:
             Score.objects.filter(date=formatted_date, fk_student=studObj, fk_exercise=exerObj).update(score=(int(row[6])))
-        count += 1
     # Close the csv file, commit changes, and close the connection
     csvfile.close()
     return count
