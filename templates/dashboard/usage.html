@@ -1,6 +1,9 @@
 {% extends "template.html" %}
+
 {% block content %}
+
     <content class="mainContent usage" id="mainContent">
+    
     {% if user.is_authenticated %}
         <!--div class="mainContent">
             <div class="container">
@@ -35,66 +38,73 @@
               </form>
             </div>
         </div-->
+        
+        
+		<div class="container">
+			<div class="row row-text-center">
+				<div class="col-md-5">
+					<div class="cliente">
+						<div align="center">
+							<h3>CalculerAuCE1 Exercise Usage</h3>
+            				<canvas id="doughnutchart1" width="250" height="250"></canvas>
+            			
+            				<ul class="doughnut-legend">
+                			{%  for id, count, lbcolor in c_scorecount %}
+                 	    		<li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
+                			{% endfor %}
+            				</ul>
+            			</div>
+					</div>
+				</div>
+				
+				<div class="col-md-5">
+					<div class="cliente">
+						<div align="center">
+							<h3>LireAuCE1 Exercise Usage</h3>
+            				<canvas id="doughnutchart2" width="250" height="250"></canvas>
+            			
+            				<ul class="doughnut-legend">
+                				{%  for id, count, lbcolor in l_scorecount %}
+                    				<li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
+                				{% endfor %}
+            				</ul>
+            			</div>
+            			<script>
+            				window.onload = function(){
+                			var ctx = document.getElementById("doughnutchart1").getContext("2d");
+                			window.myDoughnut = new Chart(ctx).Doughnut(pieData1, {
+                    			animateRotate : true
+                			});
+                			
+                			var ctx1 = document.getElementById("doughnutchart2").getContext("2d");
+                			window.myDoughnut = new Chart(ctx1).Doughnut(pieData2, {
+                    		animateRotate : true
+                			});
+             				/* var ctx = document.getElementById("canvas").getContext("2d");
+                			window.myBar = new Chart(ctx).Bar(barChartData, {
+                    		responsive: true
+                			}); */
+           					 }
 
-        <div class="square">
-            <h3>CalculerAuCE1 Exercise Usage</h3>
-            <canvas id="doughnutchart1" width="250" height="250"></canvas>
-            <ul class="doughnut-legend">
-                {%  for id, count, lbcolor in c_scorecount %}
-                    <li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
-                {% endfor %}
-            </ul>
-        </div>
+            				var pieData1 = [
+                			{%  for id, count, lbcolor in c_scorecount %}
+                				{
+                    			value: {{ count }},
+                    			color: "{{ lbcolor }}",
+                    			label: "Exercise {{ id }} times used"
+                				},
+                			{% endfor %}
+            				];
 
-        <div class="square">
-            <h3>LireAuCE1 Exercise Usage</h3>
-            <canvas id="doughnutchart2" width="250" height="250"></canvas>
-            <ul class="doughnut-legend">
-                {%  for id, count, lbcolor in l_scorecount %}
-                    <li><span style="background-color:{{ lbcolor }}">Exercise {{ id }} used <b>{{ count }}</b> times</span></li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- <div class="square sqsingle">
-            <canvas id="canvas" width="250" height="150"></canvas>
-        </div> -->
-
-        <script>
-            window.onload = function(){
-                var ctx = document.getElementById("doughnutchart1").getContext("2d");
-                window.myDoughnut = new Chart(ctx).Doughnut(pieData1, {
-                    animateRotate : true
-                });
-                var ctx1 = document.getElementById("doughnutchart2").getContext("2d");
-                window.myDoughnut = new Chart(ctx1).Doughnut(pieData2, {
-                    animateRotate : true
-                });
-             /* var ctx = document.getElementById("canvas").getContext("2d");
-                window.myBar = new Chart(ctx).Bar(barChartData, {
-                    responsive: true
-                }); */
-            }
-
-            var pieData1 = [
-                {%  for id, count, lbcolor in c_scorecount %}
-                {
-                    value: {{ count }},
-                    color: "{{ lbcolor }}",
-                    label: "Exercise {{ id }} times used"
-                },
-                {% endfor %}
-            ];
-
-            var pieData2 = [
-                {%  for id, count, lbcolor in l_scorecount %}
-                {
-                    value: {{ count }},
-                    color: "{{ lbcolor }}",
-                    label: "Exercise {{ id }} times used"
-                },
-                {% endfor %}
-            ];
+            				var pieData2 = [
+                			{%  for id, count, lbcolor in l_scorecount %}
+                			{
+                    			value: {{ count }},
+                    			color: "{{ lbcolor }}",
+                    			label: "Exercise {{ id }} times used"
+                			},
+                			{% endfor %}
+            				];
         /*  var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
             var barChartData = {
                 labels : ["January","February","March","April","May","June","July","August","September","October","November","December"],
@@ -121,10 +131,15 @@
                     }
                 ]
             }; */
-        </script>
-
+        				</script>
+					</div>
+				</div>
+				
+			</div>
+			
     {% else %}
         <a href="admin">Login</a>
     {% endif %}
+    </div>
     </content>
 {% endblock %}

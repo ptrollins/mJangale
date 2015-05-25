@@ -1,3 +1,5 @@
+#coding: utf-8
+
 from django.db.models import Avg, Count
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student  # to use models
 import csv  # for CSV parser

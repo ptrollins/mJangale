@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-{% load static i18n %}
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -13,6 +11,9 @@
     <link href="/../static/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/../static/css/style.css" />
 
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,6 +24,7 @@
   </head>
 
   <body>
+
     <div id='container'>
   
     <!-- Navbar -->
@@ -32,55 +34,65 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1 ">
       <div class='container-fluid'>
       <ul class="nav navbar-nav ">
-       
+        
         <a class='navbar-brand' rel='home' href='#' title='Home'>
-          <img style="max-width:100px; margin-top: -7px;"   src="/../static/media/mjangaledata_logo.png">
+          <img style="max-width:100px; margin-top: -7px;"   src="logo.png">
         </a>
-		
-		{% if user.is_authenticated %}
-        	<li><a href="dashboard/dashboard">Dashboard<span class="sr-only">(current)</span></a></li>
-        	<li><a href="dashboard/usage">Usage</a></li>
-        	<li><a href="dashboard/scores">Scores</a></li>
-        	<li><a href="dashboard/classes">Classes</a></li>
-        	<li><a href="dashboard/upload">Upload Data</a></li>
-      	{% else %}
-      	
-      	{% endif %}
-      		
+
+        <li>
+          <a href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        
+        <li>
+          <a href="#">Usage</a>
+        </li>
+
+        <li><a href="#">Scores</a></li>
+
+        <li>
+          <a href="#">Classes</a>
+        </li>
+        
+        <li>
+          <a href="#">Upload Data</a>
+        </li>
+      
       </ul>
-      
-      
+
       <ul class="nav navbar-nav pull-right">
-      	{% if user.is_authenticated %}
-        	{%  if user.is_superuser %}
-        		<li><a href="dashboard/admin/logout">Logout</a></li>
-        		<li><a href="dashboard/admin" class="loginLink">Admin</a></li>
-        	{% else %}
-        		<li><a href="dashboard/admin" class="loginLink">Admin</a></li>
-        	{% endif %}
-        {% else %}
-        	<li><a href="dashboard/admin" class="loginLink">Admin</a></li>        
-      	{% endif %}
+
+        <li>
+          <a href="#">Admin</a>
+        </li>
       </ul>
-      
-        <p class="navbar-text pull-right"></p>
+
+        <p class="navbar-text pull-right">Signed in as Js Lucas</p>
+
       </div>
+     
     </nav>
 
-	<!-- USERNAME MISSING, TO DO -->
+
+    <!-- Separator -->
     <div class='col-md-12 back-color'> </div>
       
+
     <div class="jumbotron jumbotron-color">
-      <div class="container-fluid">
+      <div class="container">
+      
           <h1 class="text-center jumbotron-text"><b>Welcome to the mJangale Data Dashboard!</b></h1>
       </div>
     </div>
 
   </div>
 
+
+
   <div class='col-md-12 blank-space'> </div>
 
-  <!-- Middle of the page -->
+  <!-- Page content (Post + Sidebar) -->
+
+
   <div class='container-fluid'>
     <div class="row-fluid">
 
@@ -95,36 +107,50 @@
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
         
           <div class="checkbox">
-            <label><input type="checkbox" value="remember-me">Remember me</label>
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
           </div>
 
-            <input class="btn btn-default btn-lg btn-block btn-my" value="Sign in" type="submit">         
+            <input class="btn btn-default btn-lg btn-block btn-my" value="Sign in" type="submit">
+          
           </form>
+
+
+
         </div> <!-- /container -->
       </div>
 
       <div class="col-md-offset-3 col-md-5">
-          <img src="/../static/media/mjangale_students300x400.png" class="img-responsive img-circle center-block" alt="Senegal children using mobile app"> 
+          <img src="/../static/media/mjangale_students.jpg" class="img-responsive img-circle center-block" alt="Cinque Terre"> 
       </div>
 
     </div>
   </div>
 
-  <!-- Page Footer -->  
-  <div class='navbar teste navbar-inverse navbar-default navbar-fixed-bottom navbar-foot' role='navigation'>
-   	<div class="container-fluid">
-   		<a class='navbar-brand' rel='home' href='#' title='Home'>
-    		<img style="max-width:150px; margin-top: -10px;"   src="/../static/media/mjangaledata_logo.png">
-       	</a>
+    <div id="footer">
+
+    <div class='navbar teste navbar-inverse navbar-default navbar-static-bottom navbar-foot' role='navigation'>
+       <a class='navbar-brand' rel='home' href='#' title='Home'>
+          <img style="max-width:150px; margin-top: -10px;"   src="logo.png">
+        </a>
     
-      	<div class='navbar-text pull-right'>Copyright © 2015</div>
+      <div class='navbar-text pull-right'>
+        Copyright © 2015
+      </div>
+
     </div>
+
   </div>
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="js/bootstrap.min.js"></script>
+
+  </div>
+
+
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
 
   </body>
 </html>

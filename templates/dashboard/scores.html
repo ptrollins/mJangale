@@ -2,32 +2,38 @@
 {% block content %}
     <content class="mainContent scores" id="mainContent">
     {% if user.is_authenticated %}
-        <div class="square">
-            <h2>Scores</h2>
+    
+    	<div class="container">
+    	<div class="cliente">
+    	<div class="container-fluid" align="center">
+    		<h2>Scores</h2>
             <p>
-                {% if score %}
-                    <table border="1" width="100%">
-                        <tr>
-                            <th>Exercise</th>
-                            <th>Score</th>
-                            <th>Student</th>
-                            <th>Date</th>
-                        </tr>
+            {% if score %}
+            	<table border="1" style="width:900px">
+                	<tr>
+                		<th align="center">App</th>
+                    	<th align="center">Exercise</th>
+                        <th align="center">Score</th>
+                        <th align="center">Student</th>
+                        <th align="center">Date</th>
+                    </tr>
                     {% for scores in score %}
                         <tr>
-                            <th>{{ scores.fk_exercise.fk_app.name_app }}</th>
-                            <th>{{ scores.fk_exercise.id_exercise }}</th>
-                            <th>{{ scores.score }}</th>
-                            <th>{{ scores.fk_student.id_student }}</th>
-                            <th>{{ scores.date|date:'d-m-Y'}}</th>
+                            <td align="center"><b>{{ scores.fk_exercise.fk_app.name_app }}</b> </td>
+                            <td align="center"><b>{{ scores.fk_exercise.id_exercise }}</b></td>
+                            <td align="center"><b>{{ scores.score }}</b></td>
+                            <td align="center"><b>{{ scores.fk_student.id_student }}</b></td>
+                            <td align="center"><b>{{ scores.date|date:'d-m-Y'}}</b></td>
                         </tr>
                     {% endfor %}
-                    </table>
-                {% else %}
-                    <strong>There are no score present.</strong>
-                {% endif %}
-            </p>
-        </div>
+                </table>
+            {% else %}
+                <strong>There are no score present.</strong>
+            {% endif %}
+    		</p>
+    	</div>
+    	</div>
+    	</div>        
     {% else %}
         <a href="admin">Login</a>
     {% endif %}

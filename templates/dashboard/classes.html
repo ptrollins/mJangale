@@ -3,77 +3,101 @@
 {% block content %}
     <content class="mainContent class" id="mainContent">
     {% if user.is_authenticated %}
-        <div class="container">
-            <h3>Select:</h3>
-            <form action='classes' method='post' enctype="multipart/form-data" class="form-inline"> {% csrf_token %}
-            {{ form }}
-            <input type="submit" value={% trans "Display Scores" %}>
-            </form>
-        </div>
-        <div class="square" id="students">
-            <h2>Students</h2>
-            <p>
-                {% if students %}
-                    <ul>
-                        {% for student in students %}
-                            <li><a href="#" onclick="getGraphData({{ student.id }})">Student: {{ student.id_student }}</a>,
-                                Class: {{ student.fk_class.id_class }},
-                                School: {{ student.fk_class.fk_school.id_school }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <strong>There are no students present.</strong>
-                {% endif %}
-            </p>
-        </div>
-        <div class="square" id="scores">
-            <h2 id="scoretitle">Scores</h2>
-            <p>
-                <ul id="scorelist">
-                    <li>Select a student to display scores.</li>
-                </ul>
-            </p>
-        </div>
+    
+    	<div class="container">
+    		<div class="container-fluid">
+    		<div class=cliente>
+    		
+    			<div class="row row-text-center" align="center">
+    				<div class="col-md-12">
+    					<h3>Select:</h3>
+            			<form action='classes' method='post' enctype="multipart/form-data" class="form-inline"> {% csrf_token %}
+            				{{ form }}
+            				<input type="submit" value={% trans "Display Scores" %}>
+            			</form>	
+    				</div>
+    			</div>
+    		
+    		
+            	<div class="row row-text-center">
+            		<div class="col-md-5" align="center">
+            				<h2>Students</h2>
+            				<p>
+                			{% if students %}
+                    			<ul>
+                        			{% for student in students %}
+                            			<li><a href="#" onclick="getGraphData({{ student.id }})">Student: {{ student.id_student }}</a>,
+                                		Class: {{ student.fk_class.id_class }},
+                                		School: {{ student.fk_class.fk_school.id_school }}</li>
+                        			{% endfor %}
+                    			</ul>
+                			{% else %}
+                    		<strong>There are no students present.</strong>
+                			{% endif %}
+            				</p>
+            		</div>
+            		
+            		<div class="col-md-5 col-md-offset-2" align="center">
+            		        <h2 id="scoretitle">Scores</h2>
+            				<p>
+                			<ul id="scorelist">
+                    			<li>Select a student to display scores.</li>
+                			</ul>
+            				</p>
+            			
+            			<script>
+        					var x = document.getElementsByClassName("square")
+        					var i;
+        					
+        					for (i = 0; i < x.length; i++) {
+            					x[i].style.visibility = '{{ visibility }}';
+            					}
+        
+        					function getGraphData(studentID) {
+            					var request = new XMLHttpRequest();
+            					var date;
+            					var day;
+            					var month;
+            					var year;
+            
+            					request.open('GET', '/dashboard/api/student/' + studentID, true);
+            					request.onload = function () {
+                				var graphData = JSON.parse(request.responseText);
+                				console.log(graphData);
+                				$('#scorelist').empty();
+                
+                				for (i = 0; i < graphData.scores.length; i++) {
+                    				date = new Date(graphData.scores[i].date);
+                    				year = date.getFullYear();
+                    				month = date.getMonth();
+                    				day = date.getDate();
+                    				$('#scorelist').append('<li>App:' + graphData.scores[i].fk_exercise__fk_app__name_app +
+                        				', Exercise:' + graphData.scores[i].fk_exercise__id_exercise +
+                        				', Score: ' + graphData.scores[i].score + ' of ' +
+                        				graphData.scores[i].fk_exercise__scoremax_possible + ',  ' +
+                        				day + '/' + month + '/' + year + '</li>')
+                    				console.log(graphData)
+                				}
+                				
+                				$('#scoretitle').text('Student ' + graphData.studname[0].id_student + ' Scores')
+            					};
 
-
-        <script>
-        var x = document.getElementsByClassName("square")
-        var i;
-        for (i = 0; i < x.length; i++) {
-            x[i].style.visibility = '{{ visibility }}';
-            }
-        function getGraphData(studentID) {
-            var request = new XMLHttpRequest();
-            var date;
-            var day;
-            var month;
-            var year;
-            request.open('GET', '/dashboard/api/student/' + studentID, true);
-            request.onload = function () {
-                var graphData = JSON.parse(request.responseText);
-                console.log(graphData);
-                $('#scorelist').empty();
-                for (i = 0; i < graphData.scores.length; i++) {
-                    date = new Date(graphData.scores[i].date);
-                    year = date.getFullYear();
-                    month = date.getMonth();
-                    day = date.getDate();
-                    $('#scorelist').append('<li>App:' + graphData.scores[i].fk_exercise__fk_app__name_app +
-                        ', Exercise:' + graphData.scores[i].fk_exercise__id_exercise +
-                        ', Score: ' + graphData.scores[i].score + ' of ' +
-                        graphData.scores[i].fk_exercise__scoremax_possible + ',  ' +
-                        day + '/' + month + '/' + year + '</li>')
-                    console.log(graphData)
-                }
-                $('#scoretitle').text('Student ' + graphData.studname[0].id_student + ' Scores')
-            };
-
-            request.onerror = function () {
-                return;
-            };
-            request.send()
-        }
-        </script>
+            					request.onerror = function () {
+                
+            					return;
+            					};
+            
+            					request.send()
+        					}
+        
+        				</script>
+            		</div>
+            	</div>
+            </div>
+        
+            
+        </div>
+        </div>
 
     {% else %}
         <a href="admin">Login</a>

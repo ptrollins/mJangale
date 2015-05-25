@@ -1,70 +1,90 @@
 {% extends "template.html" %}
+
 {% block content %}
     <content class="mainContent dashboard" id="mainContent">
     {% if user.is_authenticated %}
-        <div class="square">
-            <h2>Exercises Completed by Class</h2>
-            {% if scores_per_class %}
-                <ul>
-                    {% for x, y in scores_per_class%}
-                        <li>Class ID: {{  x }}, Exercises Completed: {{ y }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <strong>There are no students present.</strong>
-            {% endif %}
-        </div>
-        <div class="square">
-            <h2>Exercises Used</h2>
-            <p>
-                {% if exercise %}
-                    <ul>
-                        {% for exercises in exercise %}
-                            <li>{{ exercises.fk_app__name_app }}, Exercise: {{ exercises.id_exercise }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <strong>There are no exercises present.</strong>
-                {% endif %}
-            </p>
-        </div>
-
-        <div class="square">
-            <h2>Average Score by App</h2>
-            <ul>
-                <li>Calculer Avg: {{ math_avg.score__avg }}</li>
-                <li>Lire Avg: {{ read_avg.score__avg }}</li>
-            </ul>
-        </div>
-
-        <div class="square">
-            <h2>Uses per Month</h2>
-            <canvas id="canvas" height="150" width="250" ></canvas>
-        </div>
-
-        <script>
-            var barChartData = {
-                labels : [{% for sc in scorecount_month %}"{{ sc.month }}",{% endfor %}],
-                datasets : [
-                    {
-                        fillColor : "rgba(211,6,6,0.5)",
-                        strokeColor : "rgba(211,6,6,0.8)",
-                        highlightFill: "rgba(211,6,6,0.75)",
-                        highlightStroke: "rgba(211,6,6,1)",
-                        data : [{% for sc in scorecount_month %}{{ sc.total }},{% endfor %}]
-                    },
-
-                ]
-            };
-            window.onload = function(){
-                var ctx = document.getElementById("canvas").getContext("2d");
-                window.myBar = new Chart(ctx).Bar(barChartData, {
-                    responsive : true
-                });
-            }
-        </script>
+    
+    	<div class="container">
+    		<div class="row text-center">
+    			<div class="col-md-5">
+    				<div class="cliente">
+            			<h2>Exercises Completed by Class</h2>
+            			{% if scores_per_class %}
+                			<ul>
+                    			{% for x, y in scores_per_class%}
+                        			<li>Class ID: {{  x }}, Exercises Completed: {{ y }}</li>
+                    			{% endfor %}
+                			</ul>
+            			{% else %}
+                			<strong>There are no students present.</strong>
+            			{% endif %}
+            		</div>
+    			</div>
+    			
+    			<div class="col-md-5 col-md-offset-1">
+    				<div class="cliente">
+            			<h2>Exercises Used</h2>
+            			<p>
+                		{% if exercise %}
+                    		<ul>
+                        		{% for exercises in exercise %}
+                            		<li>{{ exercises.fk_app__name_app }}, Exercise: {{ exercises.id_exercise }}</li>
+                        		{% endfor %}
+                    		</ul>
+                		{% else %}
+                    		<strong>There are no exercises present.</strong>
+                		{% endif %}
+            			</p>
+            		</div>
+    			</div>
+    		</div>
+    		
+    		<div class="row text-center">
+    			<div class="col-md-5">
+    				<div class="cliente">
+    					<h2>Average Score by App</h2>
+            			<ul>
+                			<li>Calculer Avg: {{ math_avg.score__avg }}</li>
+                			<li>Lire Avg: {{ read_avg.score__avg }}</li>
+            			</ul>
+    				</div>
+    			</div>
+    			
+    			<div class="col-md-5 col-md-offset-1">
+    				<div class="cliente">
+    					<h2>Uses per Month</h2>
+            			<canvas id="canvas" height="379" width="633" style="width: 633px; height: 379px;" ></canvas>
+    				</div>
+    				
+    				<script>
+            			var barChartData = {
+                		labels : [{% for sc in scorecount_month %}"{{ sc.month }}",{% endfor %}],
+                		datasets : [{
+                        	fillColor : "rgba(211,6,6,0.5)",
+                        	strokeColor : "rgba(211,6,6,0.8)",
+                        	highlightFill: "rgba(211,6,6,0.75)",
+                        	highlightStroke: "rgba(211,6,6,1)",
+                        	data : [{% for sc in scorecount_month %}{{ sc.total }},{% endfor %}]
+                    	},]
+            			};
+            			
+            			window.onload = function(){
+                			var ctx = document.getElementById("canvas").getContext("2d");
+                			window.myBar = new Chart(ctx).Bar(barChartData, {
+                    		responsive : true
+                			});
+            			}
+        			</script>
+    				
+    			</div>
+    		</div>
+    	</div>
+    	
+        
     {% else %}
         <a href="admin">Login</a>
     {% endif %}
+    
     </content>
+    
 {% endblock %}

@@ -3,19 +3,22 @@
 {% block content %}
     <content class="mainContent upload" id="mainContent">
         {% if user.is_authenticated %}
-        <div class="square sqsingle" >
+        <div class="container cliente" align="center">
             <h2>{% trans Upload %}</h2>
 
                 <form action='upload' method='post' enctype="multipart/form-data"> {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" value={% trans "Upload" %}>
                 </form>
-        </div>
+                
+                <div class="col-md-12 blank-space"></div>
+                
             {% if uploadSuccess %}
                 <div class="square sqsingle">
                     Upload successful! {{ uploadCount }} scores uploaded.
                 </div>
             {% endif %}
+        </div>
         {% else %}
             <a href="admin">Login</a>
         {% endif %}
