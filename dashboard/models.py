@@ -1,13 +1,59 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core import validators
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.utils import timezone
 
+import re
+
+class UserManager(BaseUserManager):
+ 
+    def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
+        now = timezone.now()
+        
+        if not username:
+            raise ValueError(_('The given username must be set'))
+        
+        email = self.normalize_email(email)
+        
+        user = self.model(username=username, email=email,
+             is_staff=is_staff, is_active=False,
+             is_superuser=is_superuser, last_login=now,
+             date_joined=now, **extra_fields)
+        
+        user.set_password(password)
+        
+        user.save(using=self._db)
+        
+        return user
+ 
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        
+        return self._create_user(username, email, password, False, False,
+                 **extra_fields)
+ 
+    def create_superuser(self, username, email, password, **extra_fields):
+        
+        user=self._create_user(username, email, password, True, True,
+                 **extra_fields)
+        
+        user.is_active=True
+        
+        user.save(using=self._db)
+        
+        return user
 
 class User(AbstractUser):
-    """AbstractUser provides first_name, last_name, email, password. Use .get_full_name for first and last name"""
+#     objects = UserManager()
+#     """AbstractUser provides first_name, last_name, email, password. Use .get_full_name for first and last name"""
+#     username = models.CharField(('username'), max_length=30, unique=True,
+#     help_text=(''),
+#     validators=[
+#       validators.RegexValidator(re.compile('^[\w.@+-]+$'), ('Enter a valid username.'), ('invalid'))
+#     ])
     is_student = models.BooleanField(default=True)
     is_teacher = models.BooleanField(default=False)
     # id_student = models.PositiveSmallIntegerField(unique=True, null=True)
-
 
 class App(models.Model):
     id_app = models.PositiveSmallIntegerField()

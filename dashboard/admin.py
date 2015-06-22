@@ -1,4 +1,4 @@
-from dashboard.models import Exercise, Score, App, School, Classroom, Student
+from dashboard.models import Exercise, Score, App, School, Classroom, Student, User
 from django.contrib import admin
 
 admin.site.register(Exercise)
@@ -7,3 +7,4 @@ admin.site.register(App)
 admin.site.register(School)
 admin.site.register(Classroom)
 admin.site.register(Student)
+admin.site.register(User)

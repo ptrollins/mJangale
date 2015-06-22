@@ -13,7 +13,13 @@ urlpatterns = patterns('',
     url(r'^scores', 'dashboard.views.scores'),
     url(r'^classes', 'dashboard.views.classes'),
     url(r'^upload$', 'dashboard.views.upload_file'),
-    url(r'^api/student/(?P<student_id>[0-9]{1,10})/?$', 'dashboard.views.display_student_score')
+    url(r'register', 'dashboard.views.register'),
+    url(r'^api/student/(?P<student_id>[0-9]{1,10})/?$', 'dashboard.views.display_student_score'),
+    url(r'^accounts/register/$', 'dashboard.views.register_user'),
+    url(r'^accounts/register_success/$', 'dashboard.views.register_success'),
+    url(r'^login/$', 'dashboard.views.login_user', name="login"),
+    url(r'^logout/$', 'dashboard.views.logout')
+
 )
 
 # /api/student/4

@@ -83,6 +83,10 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
+
 AUTH_USER_MODEL = 'dashboard.User'
 
 REGISTRATION_OPEN = True            # If True, users can register
@@ -122,3 +126,10 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+#Django registration redux Settings
+REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_URL = '/accounts/login/'

@@ -11,7 +11,8 @@
     			<div class="row row-text-center" align="center">
     				<div class="col-md-12">
     					<h3>Select:</h3>
-            			<form action='classes' method='post' enctype="multipart/form-data" class="form-inline"> {% csrf_token %}
+            			<form action='classes' method='post' enctype="multipart/form-data" class="form-inline">
+            				{% csrf_token %}
             				{{ form }}
             				<input type="submit" value={% trans "Display Scores" %}>
             			</form>	

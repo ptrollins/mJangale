@@ -52,50 +52,60 @@
       
       <ul class="nav navbar-nav pull-right">
       	{% if user.is_authenticated %}
+      		<li><p class="navbar-text pull-right">Welcome {{ user.username }}!</p>
+      		<li><a href="logout">Logout</a></li>
         	{%  if user.is_superuser %}
-        		<li><a href="admin/logout">Logout</a></li>
-        		<li><a href="admin" class="loginLink">Admin</a></li>
-        	{% else %}
         		<li><a href="admin" class="loginLink">Admin</a></li>
         	{% endif %}
         {% else %}
+        	<li><a href="register">Sign up!</a>
         	<li><a href="admin" class="loginLink">Admin</a></li>        
       	{% endif %}
       </ul>
       
-        <p class="navbar-text pull-right"></p>
-      </div>
     </nav>
 
-	<!-- USERNAME MISSING, TO DO -->
     <div class='col-md-12 back-color'> </div>
       
     <div class="jumbotron jumbotron-color">
       <div class="container">
-          <h1 class="text-center jumbotron-text"><b>Welcome to the mJangale Data Dashboard!</b></h1>
+          <h1 class="text-center jumbotron-text"><b>Welcome to mJangale Data!</b></h1>
       </div>
     </div>
 
   </div>
 
   <div class='col-md-12 blank-space'> </div>
-
+  <div class="wrapper">
+  
   {% block content %}
   {% endblock %}
-
+  
+  <div class="push"></div>
+  </div>
   <div class='col-md-12 blank-space'> </div>
 
 
   <!-- Page Footer -->
-  <div class="container-fluid">
-  	<div class='navbar teste navbar-inverse navbar-default navbar-fixed-bottom navbar-foot' role='navigation'>
-    		<a class='navbar-brand' rel='home' href='#' title='Home'>
-       			<img style="max-width:150px; margin-top: -10px;"   src="/../static/media/mjangaledata_logo.png">
-       		</a>
+  <footer id="footer">
+  		<div class="navbar navbar-inverse navbar-default navbar-foot">
+  		<a class='navbar-brand' rel='home' href='#' title='Home'>
+    		<img style="max-width:150px;" src="/../static/media/mjangaledata_logo.png">
+    	</a>
+    		
+   		<div class='navbar-text pull-right'>Copyright © 2015</div>
+		</div>
+  </footer>	
+  
+
+  
+  <!-- <div class="container-fluid">
+  	
+    		
     
-      		<div class='navbar-text pull-right'>Copyright © 2015</div>
+      		
   	</div>
-  </div>
+  </div> -->
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -103,6 +113,6 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'js/Chart.min.js' %}"></script>
-  
+		  
   </body>
 </html>

@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+	<div class='container-fluid'>
+		<div class='row-fluid'>
+			<div class='col-md-4'>
+			</div>
+			
+			<div class='col-md-4'>
+				<div class='container-fluid'>
+			
+				<h2>Create an account!</h2>
+				
+				<form action="/dashboard/accounts/register/" method="post">
+				
+					{% csrf_token %}
+					{{ form }}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn btn-default btn-lg btn-block btn-my" value="Register" type="submit">
+					
+				</form>
+				</div>
+			</div>
+			
+			<div class='col-md-4'>
+			</div>
+		</div>
+	</div>
+{% endblock %}
