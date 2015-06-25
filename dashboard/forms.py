@@ -17,7 +17,7 @@ class ChooseClassForm(forms.Form):
 class CreateUserForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Username'}) ,required=True)
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Password'}) ,required=True)
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your password'}) ,required=True)
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your Password'}) ,required=True)
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}) ,required=True)
     
     def __init__(self, *args, **kwargs):

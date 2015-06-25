@@ -12,14 +12,18 @@
 			<div class='col-md-4'>
 				<div class='container-fluid'>
 			
-				<h2>Create an account!</h2>
+				<h2 align="center">Sign Up</h2>
 				
 				<form action="/dashboard/accounts/register/" method="post">
 				
 					{% csrf_token %}
 					{{ form }}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input class="btn btn-default btn-lg btn-block btn-my" value="Register" type="submit">
+					<!--  <input class="btn btn-default btn-lg btn-block btn-my" value="Register" type="submit">-->
+					
+					<a href="/dashboard/login" class="btn btn-default btn-lg btn-block btn-my">
+						<span>Registration coming soon!</span>
+					</a>
 					
 				</form>
 				</div>
