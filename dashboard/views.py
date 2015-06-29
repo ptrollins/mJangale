@@ -13,7 +13,7 @@ from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db import IntegrityError, connection
-from forms import UserForm
+from dashboard.forms import UserForm
 from dashboard.forms import CreateUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
