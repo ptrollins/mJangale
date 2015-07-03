@@ -2,21 +2,22 @@
 
 from django.db.models import Avg, Count
 from django.core.urlresolvers import reverse 
-from dashboard.models import Score, Exercise, App, User, School, Classroom, Student  # to use models
+from dashboard.models import Score, Exercise, App, User, School, Classroom, Student, Token  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
+from django.contrib import messages
 from .forms import UploadFileForm, ChooseClassForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response, RequestContext
 from django.core.context_processors import csrf  # For form POST security CSRF token
 from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
-from django.contrib.admin.views.decorators import staff_member_required
 from django.db import IntegrityError, connection
 from dashboard.forms import UserForm
 from dashboard.forms import CreateUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+import string, random, hashlib #For Token generation
 #from dashboard.forms import MyRegistrationForm
 
 def index(request):
@@ -372,7 +373,49 @@ def logout(request):
     auth.logout(request)
     return render_to_response('logout.html')
 
-
+def request_token(request):
+    #TODO
+    #Email handling, needs to be discussed
+    print()
+    
+def generate_token(request):
+    
+    if(request.method == 'POST'):
+        token = generate_a_token()
+    
+        messages.success(request, "Token generated with success!, you can now email it to the user. %s" %token, extra_tags="sticky")
+        
+    return render_to_response('generate_token.html', {'title':'Generate Token'}, context_instance=RequestContext(request))
+    
+        
+def generate_a_token():
+    #Generates and shuffles a string with digits and letters 
+    chars = (string.ascii_letters + string.digits)
+    charlist = list(chars)
+    random.shuffle(charlist)
+    chars = "".join(charlist)
+    
+    
+    while(True):
+        token = ""
+    
+        for i in range(5):
+            token += (random.choice(chars))
+            
+        
+        hash_token = (hashlib.sha512(token)).hexdigest()
+        
+        existing_token = False
+        
+        for i in Token.objects.all():
+            if(hash_token == i.hashed_token):
+                existing_token = True
+                break
+        
+        if not (existing_token):
+            Token.objects.create(hashed_token=hash_token)
+            return token
+    
 def register(request):
     context = RequestContext(request)
     

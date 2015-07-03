@@ -18,7 +18,9 @@ urlpatterns = patterns('',
     url(r'^accounts/register/$', 'dashboard.views.register_user'),
     url(r'^accounts/register_success/$', 'dashboard.views.register_success'),
     url(r'^login/$', 'dashboard.views.login_user', name="login"),
-    url(r'^logout/$', 'dashboard.views.logout')
+    url(r'^logout/$', 'dashboard.views.logout'),
+    url(r'^request_token', 'dashboard.views.request_token'),
+    url(r'^generate_token', 'dashboard.views.generate_token'),
 
 )
 

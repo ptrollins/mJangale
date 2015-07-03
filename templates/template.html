@@ -56,6 +56,7 @@
       		<li><p class="navbar-text pull-right">Welcome {{ user.username }}!</p>
       		<li><a href="logout">Logout</a></li>
         	{%  if user.is_superuser %}
+        		<li><a href="generate_token" class="loginLink">Generate a Token</a></li>
         		<li><a href="admin" class="loginLink">Admin</a></li>
         	{% endif %}
         {% else %}

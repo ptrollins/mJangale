@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.utils import timezone
 
 import re
+from django.template.defaultfilters import default
 
 class UserManager(BaseUserManager):
  
@@ -109,3 +110,8 @@ class Score(models.Model):
     def __unicode__(self):
         score_return = (str(self.student) + ' - ' + str(self.date) + ' - ' + str(self.exercise))
         return score_return
+
+class Token(models.Model):
+    
+    hashed_token = models.TextField()
+    used = models.BooleanField(default=False)
