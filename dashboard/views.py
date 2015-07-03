@@ -402,7 +402,7 @@ def generate_a_token():
         for i in range(5):
             token += (random.choice(chars))
             
-        
+        token = token.encode('utf-8')
         hash_token = (hashlib.sha512(token)).hexdigest()
         
         existing_token = False
