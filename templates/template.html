@@ -40,9 +40,10 @@
 		{% if user.is_authenticated %}
         	<li><a href="dashboard">Dashboard <span class="sr-only">(current)</span></a></li>
         	<li><a href="usage">Usage</a></li>
-        	<li><a href="scores">Scores</a></li>
+        	<li><a href="#">Scores</a></li>
         	<li><a href="classes">Classes</a></li>
         	<li><a href="upload">Upload Data</a></li>
+        	<li><a href="logs">Logs</a></li>
       	{% else %}
       	
       	{% endif %}
@@ -69,7 +70,7 @@
       
     <div class="jumbotron jumbotron-color">
       <div class="container">
-          <h1 class="text-center jumbotron-text"><b>Welcome to mJangale Data!</b></h1>
+          <h1 class="text-center jumbotron-text"><b>{{ title }}</b></h1>
       </div>
     </div>
 

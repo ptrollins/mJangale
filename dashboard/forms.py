@@ -5,6 +5,11 @@ from dashboard.models import User
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
+    
+    def __init__(self, *args, **kwargs):
+        super(UploadFileForm, self).__init__(*args, **kwargs)
+        
+        self.fields['file'].label=''
 
 
 class ChooseClassForm(forms.Form):

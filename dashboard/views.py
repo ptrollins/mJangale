@@ -70,6 +70,9 @@ def dashboard(request):
     
     math_avg = math_score_obj.aggregate(Avg('score'))
     read_avg = read_score_obj.aggregate(Avg('score'))
+    
+    math_avg['score__avg'] = float("%.2f" %(math_avg['score__avg']))
+    read_avg['score__avg'] = float("%.2f" %(read_avg['score__avg']))
 
     scores_per_class = []
     
@@ -161,7 +164,7 @@ def usage(request):
 
     return render_to_response('dashboard/usage.html', context_dict, context)
 
-def scores(request):
+def logs(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
@@ -172,11 +175,11 @@ def scores(request):
     # score_list = [s.score for s in Score.objects.all()]
     # {'score_list': [student_score.score for student_score in Score.objects.get(student__id=3)]}
     context_dict = {"score": scores_list,
-                    "title": 'Scores'
+                    "title": 'Logs'
     }
 
     # Render the response and send it back!
-    return render_to_response('dashboard/scores.html', context_dict, context)
+    return render_to_response('dashboard/logs.html', context_dict, context)
 
 #@staff_member_required
 def classes(request):
@@ -338,7 +341,7 @@ def login_user(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/dashboard')
+                return HttpResponseRedirect('/dashboard/dashboard')
             else:
                 HttpResponse("Your account is disabled")
         else:
