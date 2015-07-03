@@ -414,7 +414,7 @@ def generate_a_token():
         
         if not (existing_token):
             Token.objects.create(hashed_token=hash_token)
-            return token
+            return token.decode('utf-8')
     
 def register(request):
     context = RequestContext(request)
