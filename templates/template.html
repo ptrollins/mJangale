@@ -111,10 +111,21 @@
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-
+<!-- <script src="{% static 'js/jquery.min.js' %}"></script> -->
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/jquery.min.js' %}"></script>
+  
   <script src="{% static 'js/Chart.min.js' %}"></script>
+  <script>
+  
+  	$(document).ready(function(){
+  		
+  		$("#closeModalButton").on("click", function(){
+ 			$("#tokenModal").removeClass("show");
+ 			//alert("sdfsl");
+  		});
+  		
+  	});
+  </script>
 		  
   </body>
 </html>
