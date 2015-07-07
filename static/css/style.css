@@ -6,6 +6,11 @@ html {
     height: 100%;
 }
 
+.navbar-default .navbar-nav .open .dropdown-menu>li>a, .navbar-default .navbar-nav .open .dropdown-menu {
+    background-color: #222222;
+    color:#ccd1c4;
+  }
+
 .alert {
 	text-align: center;
 	

@@ -14,7 +14,7 @@ from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.db import IntegrityError, connection
 from dashboard.forms import UserForm
-from dashboard.forms import CreateUserForm
+from dashboard.forms import CreateUserForm, CustomChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 import string, random, hashlib #For Token generation
@@ -349,7 +349,7 @@ def login_user(request):
             print("Invalid login details: {0}, {1}".format(username, password))
             return HttpResponse("Invalid login details supplied.")
     else:
-        return render_to_response("dashboard/login.html", {}, context)
+        return render_to_response("dashboard/login.html", {'title':'Login'}, context)
     
 def auth_view(request):
     username = request.POST.get('username', '')
@@ -371,7 +371,7 @@ def invalid_login(request):
 
 def logout(request):
     auth.logout(request)
-    return render_to_response('logout.html')
+    return render_to_response('logout.html', {'title': 'Logout'}, RequestContext(request))
 
 def request_token(request):
     #TODO
@@ -386,8 +386,7 @@ def generate_token(request):
         messages.success(request, "Token generated with success!, you can now email it to the user. %s" %token, extra_tags="sticky")
         
     return render_to_response('generate_token.html', {'title':'Generate Token'}, context_instance=RequestContext(request))
-    
-        
+       
 def generate_a_token():
     #Generates and shuffles a string with digits and letters 
     chars = (string.ascii_letters + string.digits)
@@ -418,7 +417,7 @@ def generate_a_token():
     
 def register(request):
     context = RequestContext(request)
-    
+
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         
@@ -428,13 +427,14 @@ def register(request):
 #             user = form.save()
 #             user.set_password(user.password)
 #             user.save()
-            
+                    
             return render_to_response("register_success.html")
     else:
         form = CreateUserForm(auto_id=False)
         
         return render_to_response('register.html', {
     'form': form,
+    'title': 'Sign Up'
 },context_instance=RequestContext(request))
  
 def register_user(request):
@@ -454,3 +454,24 @@ def register_user(request):
 
 def register_success(request):
     HttpResponseRedirect('register_success.html')
+    
+def password_changed(request):
+    return render_to_response('password_changed.html')
+    
+# def change_password(request):
+#     
+#     if(request.method == 'POST'):
+#         form = CustomChangeForm(user=request.user, data=request.POST)
+#                 
+#         if(form.is_valid()):
+#             form.save()
+#             
+#             return HttpResponseRedirect('password_changed.html')
+#         
+#     else:
+#         form = CustomChangeForm(auto_id=False)
+#         
+#         return render_to_response('password_change_form.html', {
+#             'form': form,
+#             'title': 'Change your Password'
+#         }, context_instance=RequestContext(request))

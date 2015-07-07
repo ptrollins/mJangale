@@ -38,30 +38,51 @@
         </a>
 		
 		{% if user.is_authenticated %}
-        	<li><a href="dashboard">Dashboard <span class="sr-only">(current)</span></a></li>
-        	<li><a href="usage">Usage</a></li>
+        	<li><a href="/dashboard/dashboard">Dashboard <span class="sr-only">(current)</span></a></li>
+        	<li><a href="/dashboard/usage">Usage</a></li>
         	<li><a href="#">Scores</a></li>
-        	<li><a href="classes">Classes</a></li>
-        	<li><a href="upload">Upload Data</a></li>
-        	<li><a href="logs">Logs</a></li>
-      	{% else %}
-      	
+        	<li><a href="/dashboard/classes">Classes</a></li>
+        	<li><a href="/dashboard/upload">Upload Data</a></li>
+        	<li><a href="/dashboard/logs">Logs</a></li>
+
       	{% endif %}
+      		
+
+      
       		
       </ul>
       
       
       <ul class="nav navbar-nav pull-right">
-      	{% if user.is_authenticated %}
+      
+      	 {% if user.is_authenticated %}
+      		{% if user.is_superuser %}
+      			<li class='dropdown pull-right nav'>
+  					<a href='#' class='dropdown-toggle loginLink pull-right' role='button' id='dropdownMenu1' data-toggle='dropdown' aria-haspopup="true" aria-expanded="true">Admin <span class="caret"></span></a>
+  					<ul class="dropdown-menu">
+		        		<li><a href="/../dashboard/generate_token" class="loginLink">Generate a Token</a></li>
+		        		<li role="separator" class="divider"></li>
+		        		<li><a href="/dashboard/admin" class="loginLink">Django Administration</a></li>
+  					</ul>
+      			</li>
+      		{% endif %}
+      	{% endif %}
+      	
+		{% if user.is_authenticated %}
       		<li><p class="navbar-text pull-right">Welcome {{ user.username }}!</p>
-      		<li><a href="logout">Logout</a></li>
-        	{%  if user.is_superuser %}
-        		<li><a href="generate_token" class="loginLink">Generate a Token</a></li>
-        		<li><a href="admin" class="loginLink">Admin</a></li>
-        	{% endif %}
+      		
+      		<li class='dropdown pull-right nav'>
+  				<a href='#' class='dropdown-toggle loginLink pull-right' role='button' id='dropdownMenu1' data-toggle='dropdown' aria-haspopup="true" aria-expanded="true">Account <span class="caret"></span></a>
+  				<ul class="dropdown-menu">
+      				<li><a href="/dashboard/logout">Logout</a></li>
+      				<li role="separator" class="divider"></li>
+		        	<li><a href="/dashboard/password_change" class="loginLink">Change your Password</a></li>
+      			</ul>
+      		</li>
+
         {% else %}
-        	<li><a href="register">Sign up!</a>
-        	<li><a href="admin" class="loginLink">Admin</a></li>        
+        	<li><a href="/dashboard/register">Sign up!</a>
+        	<li><a href="/dashboard/admin" class="loginLink">Django Administration</a></li>
       	{% endif %}
       </ul>
       

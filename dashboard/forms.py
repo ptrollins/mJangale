@@ -2,6 +2,7 @@ from django import forms
 #from django.contrib.auth.models import User
 from dashboard.models import Classroom
 from dashboard.models import User
+from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -50,3 +51,9 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'username', 'password')
         
+class CustomChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Current Password'}) ,required=True)
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'New Password'}) ,required=True)
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your New Password'}) ,required=True)
+    
+    
