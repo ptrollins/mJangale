@@ -2,7 +2,7 @@ __author__ = 'ptrollins'
 
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from dashboard.forms import CustomChangeForm
+from dashboard.forms import CustomChangeForm, CustomSetPasswordForm, CustomPasswordResetForm
 from django.contrib.auth import views as auth_views
 # from dashboard import views
 
@@ -23,7 +23,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'dashboard.views.logout'),
     url(r'^request_token', 'dashboard.views.request_token'),
     url(r'^generate_token', 'dashboard.views.generate_token'),
-    #url(r'^change_password', 'dashboard.views.change_password'),
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'password_change_form.html', 
                                                                              'password_change_form':CustomChangeForm}),
     
@@ -48,6 +47,11 @@ urlpatterns = patterns('',
 
       #and now add the registration urls
     url(r'', include('registration.backends.default.urls')),
+    url(r'^resetpassword/passwordsent/$', 'django.contrib.auth.views.password_reset_done'),
+    url(r'^resetpassword/$', 'django.contrib.auth.views.password_reset', {'password_reset_form': CustomPasswordResetForm}),
+    url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
+    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete'),
+        
 )
 
 # /api/student/4

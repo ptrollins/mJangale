@@ -1,7 +1,7 @@
 #coding: utf-8
 
 from django.db.models import Avg, Count
-from django.core.urlresolvers import reverse 
+from django.core.mail import send_mail
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student, Token  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
@@ -13,8 +13,7 @@ from django.core.context_processors import csrf  # For form POST security CSRF t
 from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.db import IntegrityError, connection
-from dashboard.forms import UserForm
-from dashboard.forms import CreateUserForm, CustomChangeForm
+from dashboard.forms import UserForm, CreateUserForm, RequestNewTokenForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 import string, random, hashlib #For Token generation
@@ -22,7 +21,8 @@ import string, random, hashlib #For Token generation
 
 def index(request):
     context = RequestContext(request)
-    context_dict = {'message': 'Login'}
+    context_dict = {'message': 'Login',
+                    'title':'Welcome to mJangale Data'}
     return render_to_response('dashboard/index.html', context_dict, context)
 
 def dashboard(request):
@@ -183,6 +183,7 @@ def logs(request):
     return render_to_response('dashboard/logs.html', context_dict, context)
 
 #@staff_member_required
+
 def classes(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
@@ -221,6 +222,7 @@ def classes(request):
     return render_to_response('dashboard/classes.html', context_dict, context)
 
 #@staff_member_required
+
 def display_student_score(request, student_id):
     # Obtain the context from the HTTP request.
 
@@ -374,9 +376,27 @@ def logout(request):
     return render_to_response('logout.html', {'title': 'Logout'}, RequestContext(request))
 
 def request_token(request):
-    #TODO
-    #Email handling, needs to be discussed
-    print()
+    
+    if(request.method == 'POST'):
+        
+        form = RequestNewTokenForm(request.POST)
+        
+        message = '''Hi there!
+There is a new Token request for the mJangale Data platform!
+Applicant Email: %s''' %(request.POST['email'])
+        
+        success_message = '''Request realized!
+If we approve your request, you will receive an email from us.
+Thank you for your interest in the mJangale Data platform!
+        '''
+        
+        send_mail('mJangale Data Token request', message, 'jslucassf@gmail.com', ['jslucassf@gmail.com'], fail_silently=False)
+        messages.success(request, success_message, extra_tags='sticky')
+        
+        
+    form = RequestNewTokenForm(auto_id=False)
+        
+    return render_to_response('request_token_form.html', {'form': form, 'title':'Request Token'}, context_instance=RequestContext(request))
     
 def generate_token(request):
     
@@ -458,20 +478,19 @@ def register_success(request):
 def password_changed(request):
     return render_to_response('password_changed.html')
     
-# def change_password(request):
-#     
-#     if(request.method == 'POST'):
-#         form = CustomChangeForm(user=request.user, data=request.POST)
-#                 
-#         if(form.is_valid()):
-#             form.save()
-#             
-#             return HttpResponseRedirect('password_changed.html')
-#         
-#     else:
-#         form = CustomChangeForm(auto_id=False)
-#         
-#         return render_to_response('password_change_form.html', {
-#             'form': form,
-#             'title': 'Change your Password'
-#         }, context_instance=RequestContext(request))
+def reset_password_request(request):
+    success_url = '/dashboard/login'
+    
+    if(request.method == 'POST'):
+        
+        for current_user in User.objects.all():
+            if(current_user.email == request.POST['email_or_username'] or current_user.username == request.POST['email_or_username']):
+                user = current_user
+                
+        if(user):
+            print "mah oew"
+            
+        else:
+            messages.error(request, "User not found, please try again.", extra_tags="sticky")
+            return HttpResponseRedirect('/dashboard/reset_password_request')
+

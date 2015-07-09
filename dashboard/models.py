@@ -3,46 +3,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core import validators
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
-
 import re
 from django.template.defaultfilters import default
 
-class UserManager(BaseUserManager):
- 
-    def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
-        now = timezone.now()
-        
-        if not username:
-            raise ValueError(_('The given username must be set'))
-        
-        email = self.normalize_email(email)
-        
-        user = self.model(username=username, email=email,
-             is_staff=is_staff, is_active=False,
-             is_superuser=is_superuser, last_login=now,
-             date_joined=now, **extra_fields)
-        
-        user.set_password(password)
-        
-        user.save(using=self._db)
-        
-        return user
- 
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        
-        return self._create_user(username, email, password, False, False,
-                 **extra_fields)
- 
-    def create_superuser(self, username, email, password, **extra_fields):
-        
-        user=self._create_user(username, email, password, True, True,
-                 **extra_fields)
-        
-        user.is_active=True
-        
-        user.save(using=self._db)
-        
-        return user
+
 
 class User(AbstractUser):
 #     objects = UserManager()
@@ -54,12 +18,11 @@ class User(AbstractUser):
 #     ])
     is_student = models.BooleanField(default=True)
     is_teacher = models.BooleanField(default=False)
-    # id_student = models.PositiveSmallIntegerField(unique=True, null=True)
+    role = models.CharField(max_length=20)
 
 class App(models.Model):
     id_app = models.PositiveSmallIntegerField()
     name_app = models.CharField(max_length=20)
-
 
 class Exercise(models.Model):
     # id primary key
@@ -74,11 +37,13 @@ class Exercise(models.Model):
         exer_return = (str(self.id_exercise))
         return exer_return
 
-
 class School(models.Model):
     # id primary key
     id_school = models.PositiveSmallIntegerField()
-
+    name_school = models.CharField(max_length=200)
+    city_school = models.CharField(max_length=200)
+    number_students = models.PositiveIntegerField()
+    number_classes = models.PositiveIntegerField()
 
 class Classroom(models.Model):
     # id primary key
@@ -90,12 +55,10 @@ class Classroom(models.Model):
     class Meta:
         unique_together = ('id_class', 'fk_school')
 
-
 class Student(models.Model):
     # id
     id_student = models.PositiveSmallIntegerField()
     fk_class = models.ForeignKey(Classroom)
-
 
 class Score(models.Model):
     # id primary key

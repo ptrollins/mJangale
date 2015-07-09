@@ -1,8 +1,9 @@
 from django import forms
+from django.contrib import auth
 #from django.contrib.auth.models import User
 from dashboard.models import Classroom
 from dashboard.models import User
-from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -12,12 +13,17 @@ class UploadFileForm(forms.Form):
         
         self.fields['file'].label=''
 
-
 class ChooseClassForm(forms.Form):
     # class_id = forms.ModelChoiceField(Classroom.objects.values_list('id_class', flat=True), empty_label='Select Class')
     idquery = Classroom.objects.values_list('id_class', flat=True)
     idquery_choices = [('', 'Select Class')] + [(id, id) for id in idquery]
     class_id = forms.ChoiceField(idquery_choices, required=False, widget=forms.Select())
+
+user_roles = (
+              'Admin',
+              'Teacher',
+              'Director'
+            )
 
 class CreateUserForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Username'}) ,required=True)
@@ -56,4 +62,26 @@ class CustomChangeForm(PasswordChangeForm):
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'New Password'}) ,required=True)
     new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your New Password'}) ,required=True)
     
+    def __init__(self, *args, **kwargs):
+        super(CustomChangeForm, self).__init__(*args, **kwargs)
+        
+        for fieldname in ['old_password', 'new_password1', 'new_password2']:
+            self.fields[fieldname].label=''
+
+class CustomSetPasswordForm(auth.forms.SetPasswordForm):
     
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Type your new Password'}), required=True)
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your new Password'}), required=True)
+        
+class CustomPasswordResetForm(auth.forms.PasswordResetForm):
+    
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'Placeholder':'Email'}))
+
+class RequestNewTokenForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}) ,required=True)
+    
+    def __init__(self, *args, **kwargs):
+        super(RequestNewTokenForm, self).__init__(*args, **kwargs)
+        
+        for fieldname in ['email']:
+            self.fields[fieldname].label=''

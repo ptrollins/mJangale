@@ -17,14 +17,10 @@
 					{% csrf_token %}
 					{{ form }}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<!--  <input class="btn btn-default btn-lg btn-block btn-my" value="Register" type="submit">-->
+					<input class="btn btn-default btn-lg btn-block btn-my" value="Register" type="submit">
 					
-					<a href="/dashboard/login" class="btn btn-default btn-lg btn-block btn-my">
-						<span>Request a Token coming soon!</span>
-					</a>
-					
-					<a href="/dashboard/login" class="btn btn-default btn-lg btn-block btn-my">
-						<span>Registration coming soon!</span>
+					<a href="/dashboard/request_token" class="btn btn-default btn-lg btn-block btn-my">
+						<span>Request a Token!</span>
 					</a>
 					
 				</form>
