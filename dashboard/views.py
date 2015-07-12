@@ -2,6 +2,7 @@
 
 from django.db.models import Avg, Count, Max
 from django.core.mail import send_mail
+from django.conf import settings
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student, Token  # to use models
 import csv  # for CSV parser
 import sqlite3  # for DB
@@ -400,7 +401,7 @@ Thank you for your interest in the mJangale Data platform!
 
 '''
         
-        send_mail('mJangale Data Token request', message, 'jslucassf@gmail.com', ['jslucassf@gmail.com'], fail_silently=False)
+        send_mail('mJangale Data Token request', message, settings.DEFAULT_FROM_EMAIL, ['jslucassf@gmail.com'], fail_silently=False)
         messages.success(request, success_message, extra_tags='sticky')
         
         
@@ -421,7 +422,7 @@ Token: %s.
 Now you can head to mjangale.herokuapp/dashboard/register/ and Sign Up for an mJangale Data account!
         ''' %(token)
     
-        send_mail('mJangale Data Token', message, 'jslucassf@gmail.com', [str(request.POST['email'])], fail_silently=False)
+        send_mail('mJangale Data Token', message, settings.DEFAULT_FROM_EMAIL, [str(request.POST['email'])], fail_silently=False)
         
         messages.success(request, "Token generated and emailed to the user with success!. Token: %s" %token, extra_tags="sticky")
         return render_to_response('generate_token.html', {
