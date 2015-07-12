@@ -425,7 +425,7 @@ Now you can head to mjangale.herokuapp/dashboard/register/ and Sign Up for an mJ
         send_mail('mJangale Data Token', message, settings.DEFAULT_FROM_EMAIL, [str(request.POST['email'])], fail_silently=False)
         
         messages.success(request, "Token generated and emailed to the user with success!. Token: %s" %token, extra_tags="sticky")
-        return render_to_response('generate_token.html', {
+        return render_to_response('token/generate_token.html', {
         'title':'Generate Token',
         'form': form,
         }, context_instance=RequestContext(request))
