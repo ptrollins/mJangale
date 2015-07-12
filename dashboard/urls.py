@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'dashboard.views.logout'),
     url(r'^request_token', 'dashboard.views.request_token'),
     url(r'^generate_token', 'dashboard.views.generate_token'),
-    url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'password_change_form.html', 
+    url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'auth/password_change_form.html', 
                                                                              'password_change_form':CustomChangeForm}),
     
     url(r'^password/change/$',

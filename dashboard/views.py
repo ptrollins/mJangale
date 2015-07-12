@@ -380,7 +380,7 @@ def invalid_login(request):
 
 def logout(request):
     auth.logout(request)
-    return render_to_response('logout.html', {'title': 'Logout'}, RequestContext(request))
+    return render_to_response('auth/logout.html', {'title': 'Logout'}, RequestContext(request))
 
 def request_token(request):
     
@@ -406,7 +406,7 @@ Thank you for your interest in the mJangale Data platform!
         
     form = RequestNewTokenForm(auto_id=False)
         
-    return render_to_response('request_token_form.html', {'form': form, 'title':'Request Token'}, context_instance=RequestContext(request))
+    return render_to_response('token/request_token_form.html', {'form': form, 'title':'Request Token'}, context_instance=RequestContext(request))
     
 def generate_token(request):
     
@@ -430,7 +430,7 @@ Now you can head to mjangale.herokuapp/dashboard/register/ and Sign Up for an mJ
         }, context_instance=RequestContext(request))
     else:
         form = GenerateTokenForm(auto_id=False)
-        return render_to_response('generate_token.html', {'form': form, 'title':'Generate Token'}, context_instance=RequestContext(request))
+        return render_to_response('token/generate_token.html', {'form': form, 'title':'Generate Token'}, context_instance=RequestContext(request))
 
 def generate_a_token(role, id):
     #Generates and shuffles a string with digits and letters 
@@ -483,13 +483,13 @@ def register(request):
                                                 class_id=token.class_id)
                 user.save()
                     
-                return render_to_response("register_success.html" , {} , context_instance=RequestContext(request))
+                return render_to_response("auth/register_success.html" , {} , context_instance=RequestContext(request))
         else:
             messages.error(request, 'Your token is invalid, please request a token before Signing Up', extra_tags='Sticky')
         
     form = CreateUserForm(auto_id=False)
         
-    return render_to_response('register.html', {
+    return render_to_response('auth/register.html', {
     'form': form,
     'title': 'Sign Up'
 },context_instance=RequestContext(request))
@@ -525,7 +525,7 @@ def register_success(request):
     HttpResponseRedirect('register_success.html')
     
 def password_changed(request):
-    return render_to_response('password_changed.html')
+    return render_to_response('auth/password_changed.html')
     
 def reset_password_request(request):
     success_url = '/dashboard/login'
