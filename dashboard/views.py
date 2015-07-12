@@ -535,10 +535,7 @@ def reset_password_request(request):
         for current_user in User.objects.all():
             if(current_user.email == request.POST['email_or_username'] or current_user.username == request.POST['email_or_username']):
                 user = current_user
-                
-        if(user):
-            print "mah oew"
-            
+
         else:
             messages.error(request, "User not found, please try again.", extra_tags="sticky")
             return HttpResponseRedirect('/dashboard/reset_password_request')
