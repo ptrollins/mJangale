@@ -47,10 +47,12 @@ urlpatterns = patterns('',
 
       #and now add the registration urls
     url(r'', include('registration.backends.default.urls')),
-    url(r'^resetpassword/passwordsent/$', 'django.contrib.auth.views.password_reset_done'),
-    url(r'^resetpassword/$', 'django.contrib.auth.views.password_reset', {'password_reset_form': CustomPasswordResetForm}),
-    url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
-    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete'),
+    url(r'^resetpassword/passwordsent/$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'auth/password_reset_done.html'}),
+    url(r'^resetpassword/$', 'django.contrib.auth.views.password_reset', {'password_reset_form': CustomPasswordResetForm,
+                                                                          'template_name': 'auth/password_reset_form.html',
+                                                                          'email_template_name':'auth/password_reset_email.html'}),
+    url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', {'template_name':'registration/password_reset_confirm.html'}),
+    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', {'template_name':'auth/password_reset_complete.html'}),
         
 )
 

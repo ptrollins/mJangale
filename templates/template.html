@@ -82,7 +82,9 @@
 
         {% else %}
         	<li><a href="/dashboard/register">Sign up!</a>
-        	<li><a href="/dashboard/admin" class="loginLink">Django Administration</a></li>
+        	{% if user.is_superuser or user.role == 'Admin' %}
+        		<li><a href="/dashboard/admin" class="loginLink">Django Administration</a></li>
+        	{% endif %}
       	{% endif %}
       </ul>
       
