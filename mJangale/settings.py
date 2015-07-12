@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.conf.global_settings import EMAIL_PORT
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -134,11 +135,13 @@ REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/accounts/login/'
 
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'jslucassf@gmail.com'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'jslucassf@gmail.com'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = 'mjangale@mjangale.com'
+EMAIL_HOST = 'smtpout.secureserver.net'
+#EMAIL_PORT = 587
+EMAIL_PORT = 80
+SERVER_EMAIL = 'mjangale@mjangale.com'
+EMAIL_HOST_USER = 'mjangale@mjangale.com'
+EMAIL_HOST_PASSWORD = 'pace1234'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

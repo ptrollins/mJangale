@@ -10,7 +10,7 @@
     		
     			<div class="row row-text-center" align="center">
     				<div class="col-md-12">
-    					<h3>Select:</h3>
+    					<h3><strong>Select:</strong></h3>
             			<form action='classes' method='post' enctype="multipart/form-data" class="form-inline">
             				{% csrf_token %}
             				{{ form }}
@@ -22,7 +22,7 @@
     		
             	<div class="row row-text-center">
             		<div class="col-md-5" align="center">
-            				<h2>Students</h2>
+            				<h2><strong>Students</strong></h2>
             				<p>
                 			{% if students %}
                     			<ul>
@@ -39,7 +39,7 @@
             		</div>
             		
             		<div class="col-md-5 col-md-offset-2" align="center">
-            		        <h2 id="scoretitle">Scores</h2>
+            		        <h2 id="scoretitle"><strong>Scores</strong></h2>
             				<p>
                 			<ul id="scorelist">
                     			<li>Select a student to display scores.</li>

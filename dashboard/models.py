@@ -18,7 +18,7 @@ class User(AbstractUser):
 #     ])
     is_student = models.BooleanField(default=True)
     is_teacher = models.BooleanField(default=False)
-    role = models.CharField(max_length=20)
+    role = models.CharField(max_length=20, default='')
 
 class App(models.Model):
     id_app = models.PositiveSmallIntegerField()
@@ -40,10 +40,10 @@ class Exercise(models.Model):
 class School(models.Model):
     # id primary key
     id_school = models.PositiveSmallIntegerField()
-    name_school = models.CharField(max_length=200)
-    city_school = models.CharField(max_length=200)
-    number_students = models.PositiveIntegerField()
-    number_classes = models.PositiveIntegerField()
+    name_school = models.CharField(max_length=200, default='')
+    city_school = models.CharField(max_length=200, default='')
+    number_students = models.PositiveIntegerField(default=0)
+    number_classes = models.PositiveIntegerField(default=0)
 
 class Classroom(models.Model):
     # id primary key

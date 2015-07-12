@@ -8,7 +8,7 @@
     		<div class="row text-center">
     			<div class="col-md-5">
     				<div class="cliente">
-            			<h2>Uses by Class</h2>
+            			<h2><strong>Uses by Class</strong></h2>
             			{% if scores_per_class %}
                 			<ul>
                     			{% for x, y in scores_per_class%}
@@ -23,7 +23,7 @@
     			
     			<div class="col-md-5 col-md-offset-1">
     				<div class="cliente">
-            			<h2>Exercises Used</h2>
+            			<h2><strong>Exercises Used</strong></h2>
             			<p>
                 		{% if exercise %}
                     		<ul>
@@ -42,17 +42,17 @@
     		<div class="row text-center">
     			<div class="col-md-5">
     				<div class="cliente">
-    					<h2>Average Score by App</h2>
+    					<h2><strong>Average Score by App</strong></h2>
             			<ul>
-                			<li>CalculerAuCE1: {{ math_avg.score__avg }}</li>
-                			<li>LireAuCE1: {{ read_avg.score__avg }}</li>
+                			<li>CalculerAuCE1: {{ math_avg.score__avg }} / {{ math_max.score__max }}</li>
+                			<li>LireAuCE1: {{ read_avg.score__avg }} / {{ read_max.score__max }}</li>
             			</ul>
     				</div>
     			</div>
     			
     			<div class="col-md-5 col-md-offset-1">
     				<div class="cliente">
-    					<h2>Uses per Month</h2>
+    					<h2><strong>Uses per Month</strong></h2>
             			<canvas id="canvas" height="379" width="633" style="width: 633px; height: 379px;" ></canvas>
     				</div>
     				

@@ -10,7 +10,32 @@
 			</div>
 			
 			<div class='col-md-4'>
+				{% if messages %}
+					<div class="modal show" tabindex="-1" id="tokenModal" role="dialog" aria-labelledby="mySmallModalLabel">
+					  	<div class="modal-dialog">
+					    	<div class="modal-content">
+					    	
+					    	<div class="modal-header">
+					    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					    	</div>
+								
+								<div class='modal-body'>
+									{% for message in messages %}
+										<p{% if message.tags %} class="alert alert-danger" role="alert" {% endif %}> {{ message }}
+									{% endfor %}
+								</div>
+								
+								<div class='modal-footer'>
+									<button type="button" id="closeModalButton" class="btn btn-default" data-dismiss="modal">Close</button>
+								</div>
+					    	</div>
+						</div>
+					</div>
+				{% endif %}
+				
 				<div class='container-fluid'>
+				
+				
 				
 				<form action="/dashboard/accounts/register/" method="post">
 				

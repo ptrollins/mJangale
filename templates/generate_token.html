@@ -23,10 +23,14 @@
 									{% for message in messages %}
 										<p{% if message.tags %} class="alert alert-success" role="alert" {% endif %}> {{ message }}
 									{% endfor %}
+									
+									
 								</div>
 								
 								<div class='modal-footer'>
-									<button type="button" id="closeModalButton" class="btn btn-default" data-dismiss="modal">Close</button>
+									<form action='/dashboard/email_token/'>
+										<button type="button" id="closeModalButton" class="btn btn-default" data-dismiss="modal">Close</button>
+									</form>
 								</div>
 					    	</div>
 						</div>
@@ -38,10 +42,11 @@
 				
 				<form action="/dashboard/generate_token/" method="post">
 					{% csrf_token %}
+					{{ form }}
 					<input class="hidden" id='submit-form' value="Generate" type="submit" name="generate_token">
 				</form>
 				
-				<label class='btn btn-default btn-lg btn-block btn-my' for='submit-form'>Generate</label>
+				<label class='btn btn-default btn-lg btn-block btn-my' for='submit-form'>Generate token and send to user</label>
 			</div>
 			
 			<div class='col-md-4'>

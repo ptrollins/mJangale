@@ -1,6 +1,6 @@
 #coding: utf-8
 
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Max
 from django.core.mail import send_mail
 from dashboard.models import Score, Exercise, App, User, School, Classroom, Student, Token  # to use models
 import csv  # for CSV parser
@@ -72,6 +72,9 @@ def dashboard(request):
     math_avg = math_score_obj.aggregate(Avg('score'))
     read_avg = read_score_obj.aggregate(Avg('score'))
     
+    math_max = math_score_obj.aggregate(Max('score'))
+    read_max = read_score_obj.aggregate(Max('score'))
+    
     math_avg['score__avg'] = float("%.2f" %(math_avg['score__avg']))
     read_avg['score__avg'] = float("%.2f" %(read_avg['score__avg']))
 
@@ -119,6 +122,8 @@ def dashboard(request):
                     "scores_per_class": scores_per_class,
                     "math_avg": math_avg,
                     "read_avg": read_avg,
+                    "math_max": math_max,
+                    "read_max": read_max,
                     "title": 'Dashboard'
     }
 
@@ -171,7 +176,8 @@ def logs(request):
 
     # Query the database for a list of ALL students currently stored.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
-    scores_list = Score.objects.order_by("fk_exercise__id_exercise")
+    #scores_list = Score.objects.order_by("fk_exercise__id_exercise")
+    scores_list = Score.objects.order_by("date")[::-1]
     
     # score_list = [s.score for s in Score.objects.all()]
     # {'score_list': [student_score.score for student_score in Score.objects.get(student__id=3)]}
@@ -401,12 +407,27 @@ Thank you for your interest in the mJangale Data platform!
 def generate_token(request):
     
     if(request.method == 'POST'):
+        
+        form = RequestNewTokenForm(request.POST)
         token = generate_a_token()
     
-        messages.success(request, "Token generated with success!, you can now email it to the user. %s" %token, extra_tags="sticky")
+        message = '''Good news!
+Your token request for mJangale Data has been approved!
+Token: %s.
+Now you can head to mjangale.herokuapp/dashboard/register/ and Sign Up for an mJangale Data account!
+        ''' %(token)
+    
+        send_mail('mJangale Data Token', message, 'jslucassf@gmail.com', [str(request.POST['email'])], fail_silently=False)
         
-    return render_to_response('generate_token.html', {'title':'Generate Token'}, context_instance=RequestContext(request))
-       
+        messages.success(request, "Token generated and emailed to the user with success!. Token: %s" %token, extra_tags="sticky")
+        return render_to_response('generate_token.html', {
+        'title':'Generate Token',
+        'form': form,
+        }, context_instance=RequestContext(request))
+    else:
+        form = RequestNewTokenForm(auto_id=False)
+        return render_to_response('generate_token.html', {'form': form, 'title':'Generate Token'}, context_instance=RequestContext(request))
+
 def generate_a_token():
     #Generates and shuffles a string with digits and letters 
     chars = (string.ascii_letters + string.digits)
@@ -441,22 +462,43 @@ def register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         
-        if form.is_valid():
-            user = User.objects.create_user(username=request.POST['username'], email=request.POST['email'], password=request.POST['password2'])
-            user.save()
-#             user = form.save()
-#             user.set_password(user.password)
-#             user.save()
+        token = is_allowed(request.POST['token'])
+            
+        if(token):
+                
+            if form.is_valid():
+                       
+                token.used = True
+                token.save()
+                        
+                user = User.objects.create_user(username=request.POST['username'], 
+                                                email=request.POST['email'], password=request.POST['password2'], 
+                                                role=request.POST['role'])
+                user.save()
                     
-            return render_to_response("register_success.html")
-    else:
-        form = CreateUserForm(auto_id=False)
+                return render_to_response("register_success.html")
+        else:
+            messages.error(request, 'Your token is invalid, please request a token before Signing Up', extra_tags='Sticky')
         
-        return render_to_response('register.html', {
+    form = CreateUserForm(auto_id=False)
+        
+    return render_to_response('register.html', {
     'form': form,
     'title': 'Sign Up'
 },context_instance=RequestContext(request))
  
+def is_allowed(token):
+    tokens = Token.objects.all()
+    
+    token = token.encode('utf-8')
+    hash_token = (hashlib.sha512(token)).hexdigest()
+    
+    for i in tokens:
+        if(hash_token == i.hashed_token and not i.used):
+            return i
+    
+    return None
+    
 def register_user(request):
     if(request.method == 'POST'):
         form = UserForm(request.POST)
@@ -493,4 +535,3 @@ def reset_password_request(request):
         else:
             messages.error(request, "User not found, please try again.", extra_tags="sticky")
             return HttpResponseRedirect('/dashboard/reset_password_request')
-

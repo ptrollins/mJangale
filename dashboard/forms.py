@@ -20,21 +20,24 @@ class ChooseClassForm(forms.Form):
     class_id = forms.ChoiceField(idquery_choices, required=False, widget=forms.Select())
 
 user_roles = (
-              'Admin',
-              'Teacher',
-              'Director'
+              ('Admin', 'Admin'),
+              ('Teacher', 'Teacher'),
+              ('Director', 'Director')
             )
 
 class CreateUserForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Username'}) ,required=True)
+    username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Username'}), required=True)
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Password'}) ,required=True)
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your Password'}) ,required=True)
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}) ,required=True)
+    role = forms.ChoiceField(choices=user_roles, widget=forms.Select(attrs={'class':'form-control'}), required=True)
+    
+    token = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Token'}), required=True)
     
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
 
-        for fieldname in ['username', 'email', 'password1', 'password2']:
+        for fieldname in ['username', 'email', 'password1', 'password2', 'token']:
             self.fields[fieldname].help_text = None
             self.fields[fieldname].label=''
     
