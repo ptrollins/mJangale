@@ -12,7 +12,9 @@
             			{% if scores_per_class %}
                 			<ul>
                     			{% for x, y in scores_per_class%}
-                        			<li>Class ID: {{  x }}, Exercises Completed: {{ y }}</li>
+                    				{% if user.class_id == x or user.class_id == '*' %}
+                    					<li>Class ID: {{  x }}, Exercises Completed: {{ y }}</li>
+                    				{% endif %}
                     			{% endfor %}
                 			</ul>
             			{% else %}

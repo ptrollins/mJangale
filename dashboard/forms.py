@@ -30,7 +30,6 @@ class CreateUserForm(forms.ModelForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Password'}) ,required=True)
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password', 'Placeholder':'Confirm your Password'}) ,required=True)
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}) ,required=True)
-    role = forms.ChoiceField(choices=user_roles, widget=forms.Select(attrs={'class':'form-control'}), required=True)
     
     token = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Token'}), required=True)
     
@@ -81,10 +80,23 @@ class CustomPasswordResetForm(auth.forms.PasswordResetForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'Placeholder':'Email'}))
 
 class RequestNewTokenForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}) ,required=True)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}), required=True)
+    description = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control', 'Placeholder':'Enter a message explaining Who you are.'}) ,required=True)
     
     def __init__(self, *args, **kwargs):
         super(RequestNewTokenForm, self).__init__(*args, **kwargs)
         
-        for fieldname in ['email']:
+        for fieldname in ['email', 'description']:
             self.fields[fieldname].label=''
+            
+class GenerateTokenForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}), required=True)
+    role = forms.ChoiceField(choices=user_roles, widget=forms.Select(attrs={'class':'form-control'}), required=True)
+    class_id = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Class ID'}))
+    
+    def __init__(self, *args, **kwargs):
+        super(GenerateTokenForm, self).__init__(*args, **kwargs)
+        
+        for fieldname in ['email', 'class_id']:
+            self.fields[fieldname].label=''
+    

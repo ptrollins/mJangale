@@ -42,7 +42,21 @@
 				
 				<form action="/dashboard/generate_token/" method="post">
 					{% csrf_token %}
-					{{ form }}
+					
+					{{ form.email.errors}}
+					{{ form.email }}
+					
+					<label><strong>Role:</strong></label>
+					{{ form.role.errors }}
+					{{ form.role }}
+					
+					<label><strong>Class ID: </strong></label> 
+					<span class="glyphicon glyphicon-question-sign" title='If the role of the user is Teacher, enter the ID of the class that this teacher should be able to see, otherwise, leave it blank.'></span>
+					{{ form.class_id.errors }}
+					{{ form.class_id }}
+					
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
+					
 					<input class="hidden" id='submit-form' value="Generate" type="submit" name="generate_token">
 				</form>
 				

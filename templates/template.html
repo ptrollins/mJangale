@@ -56,7 +56,7 @@
       <ul class="nav navbar-nav pull-right">
       
       	 {% if user.is_authenticated %}
-      		{% if user.is_superuser %}
+      		{% if user.is_superuser or user.role == 'Admin' %}
       			<li class='dropdown pull-right nav'>
   					<a href='#' class='dropdown-toggle loginLink pull-right' role='button' id='dropdownMenu1' data-toggle='dropdown' aria-haspopup="true" aria-expanded="true">Admin <span class="caret"></span></a>
   					<ul class="dropdown-menu">

@@ -35,7 +35,17 @@
 				
 				<form action="/dashboard/request_token/" method="post">
 					{% csrf_token %}
-					{{ form }}
+<!-- 					{{ form }} -->
+
+					{{ form.email.errors }}
+					{{ form.email }}
+					
+					
+					<h3><strong>Who are you?</strong></h3>
+					{{ form.description.errors }}
+					{{ form.description }}
+					
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					
 					<input type="submit" value="Submit" class="btn btn-default btn-lg btn-block btn-my"/>
 				</form>

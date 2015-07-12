@@ -25,13 +25,19 @@
             				<h2><strong>Students</strong></h2>
             				<p>
                 			{% if students %}
-                    			<ul>
-                        			{% for student in students %}
-                            			<li><a href="#" onclick="getGraphData({{ student.id }})">Student: {{ student.id_student }}</a>,
-                                		Class: {{ student.fk_class.id_class }},
-                                		School: {{ student.fk_class.fk_school.id_school }}</li>
-                        			{% endfor %}
-                    			</ul>
+                				{% if id == user.class_id or user.class_id == '*' %}
+	                    			<ul>
+	                        			{% for student in students %}
+	                        				
+		                            		<li><a href="#" onclick="getGraphData({{ student.id }})">Student: {{ student.id_student }}</a>,
+		                                	Class: {{ student.fk_class.id_class }},
+		                                	School: {{ student.fk_class.fk_school.id_school }}</li>
+	
+	                        			{% endfor %}
+	                    			</ul>
+	                    		{% else %}
+	                    			<strong>There are no students present.</strong>
+                    			{% endif %}
                 			{% else %}
                     		<strong>There are no students present.</strong>
                 			{% endif %}

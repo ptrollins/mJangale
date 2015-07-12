@@ -13,7 +13,7 @@ from django.core.context_processors import csrf  # For form POST security CSRF t
 from django.contrib import auth  #for authentication
 from io import TextIOWrapper  #
 from django.db import IntegrityError, connection
-from dashboard.forms import UserForm, CreateUserForm, RequestNewTokenForm
+from dashboard.forms import UserForm, CreateUserForm, RequestNewTokenForm, GenerateTokenForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 import string, random, hashlib #For Token generation
@@ -209,7 +209,8 @@ def classes(request):
 
         context_dict.update({"students": students_list,
                              "title": 'Classes',
-                             "visibility": 'visible'
+                             "visibility": 'visible',
+                             "id": cid
         })
 
         if form.is_valid():
@@ -389,12 +390,15 @@ def request_token(request):
         
         message = '''Hi there!
 There is a new Token request for the mJangale Data platform!
-Applicant Email: %s''' %(request.POST['email'])
-        
+Applicant Email: %s
+
+"%s" ''' %(request.POST['email'], request.POST['description'])
+
         success_message = '''Request realized!
 If we approve your request, you will receive an email from us.
 Thank you for your interest in the mJangale Data platform!
-        '''
+
+'''
         
         send_mail('mJangale Data Token request', message, 'jslucassf@gmail.com', ['jslucassf@gmail.com'], fail_silently=False)
         messages.success(request, success_message, extra_tags='sticky')
@@ -408,8 +412,8 @@ def generate_token(request):
     
     if(request.method == 'POST'):
         
-        form = RequestNewTokenForm(request.POST)
-        token = generate_a_token()
+        form = GenerateTokenForm(request.POST)
+        token = generate_a_token(request.POST['role'], request.POST['class_id'])
     
         message = '''Good news!
 Your token request for mJangale Data has been approved!
@@ -425,16 +429,18 @@ Now you can head to mjangale.herokuapp/dashboard/register/ and Sign Up for an mJ
         'form': form,
         }, context_instance=RequestContext(request))
     else:
-        form = RequestNewTokenForm(auto_id=False)
+        form = GenerateTokenForm(auto_id=False)
         return render_to_response('generate_token.html', {'form': form, 'title':'Generate Token'}, context_instance=RequestContext(request))
 
-def generate_a_token():
+def generate_a_token(role, id):
     #Generates and shuffles a string with digits and letters 
     chars = (string.ascii_letters + string.digits)
     charlist = list(chars)
     random.shuffle(charlist)
     chars = "".join(charlist)
     
+    if(id == ''):
+        id = '*'
     
     while(True):
         token = ""
@@ -453,7 +459,7 @@ def generate_a_token():
                 break
         
         if not (existing_token):
-            Token.objects.create(hashed_token=hash_token)
+            Token.objects.create(hashed_token=hash_token, used=False, user_role=role, class_id=id)
             return token.decode('utf-8')
     
 def register(request):
@@ -473,10 +479,11 @@ def register(request):
                         
                 user = User.objects.create_user(username=request.POST['username'], 
                                                 email=request.POST['email'], password=request.POST['password2'], 
-                                                role=request.POST['role'])
+                                                role=token.user_role,
+                                                class_id=token.class_id)
                 user.save()
                     
-                return render_to_response("register_success.html")
+                return render_to_response("register_success.html" , {} , context_instance=RequestContext(request))
         else:
             messages.error(request, 'Your token is invalid, please request a token before Signing Up', extra_tags='Sticky')
         
