@@ -401,7 +401,7 @@ Thank you for your interest in the mJangale Data platform!
 
 '''
         
-        send_mail('mJangale Data Token request', message, settings.DEFAULT_FROM_EMAIL, ['jslucassf@gmail.com'], fail_silently=False)
+        send_mail('mJangale Data Token request', message, settings.DEFAULT_FROM_EMAIL, [settings.DEFAULT_FROM_EMAIL], fail_silently=False)
         messages.success(request, success_message, extra_tags='sticky')
         
         
