@@ -38,21 +38,24 @@ urlpatterns = patterns('',
     url(r'^password/reset/done/$',
                     auth_views.password_reset_done,
                     name='password_reset_done'),
+                       
     url(r'^password/reset/complete/$',
                     auth_views.password_reset_complete,
                     name='password_reset_complete'),
+                       
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
                     auth_views.password_reset_confirm,
                     name='password_reset_confirm'),
 
       #and now add the registration urls
     url(r'', include('registration.backends.default.urls')),
-    url(r'^resetpassword/passwordsent/$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'auth/password_reset_done.html'}),
+    url(r'^resetpassword/passwordsent/$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'registration/password_reset_done.html'}),
     url(r'^resetpassword/$', 'django.contrib.auth.views.password_reset', {'password_reset_form': CustomPasswordResetForm,
-                                                                          'template_name': 'auth/password_reset_form.html',
-                                                                          'email_template_name':'auth/password_reset_email.html'}),
-    url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', {'template_name':'registration/password_reset_confirm.html'}),
-    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', {'template_name':'auth/password_reset_complete.html'}),
+                                                                          'template_name': 'registration/password_reset_form.html',
+                                                                          'email_template_name':'registration/password_reset_email.html'}),
+    url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', {'password_reset_form': CustomPasswordResetForm,
+                                                                                                                 'template_name':'registration/password_reset_confirm.html'}),
+    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', {'template_name':'registration/password_reset_complete.html'}),
         
 )
 
