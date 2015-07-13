@@ -9,6 +9,10 @@
 					<div class="cliente">
 						<div align="center">
 						
+							{% for exercise in math_exercises_list %}
+								{{ exercise }}
+							{% endfor %}
+						
 							<h3><strong>CalculerAuCE1 Average Scores</strong></h3>
             				<canvas id="barchart1" height="500" width="633" style="width: 633px; height: 379px;"></canvas>
             			

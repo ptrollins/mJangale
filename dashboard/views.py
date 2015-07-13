@@ -181,7 +181,8 @@ def scores(request):
         
     context_dict = {'math_exercises_avg': math_exercises_avg,
                     'reading_exercises_avg': reading_exercises_avg,
-                    'title': 'Scores'
+                    'title': 'Scores',
+                    'math_exercises_list': math_exercises_list
     }
     
     return render_to_response('dashboard/scores.html', context_dict, RequestContext(request))
