@@ -173,8 +173,8 @@ def usage(request):
 
 def scores(request):
     
-    math_exercises_list = Exercise.objects.filter(fk_app_id=1)
-    reading_exercises_list = Exercise.objects.filter(fk_app_id=2)
+    math_exercises_list = Exercise.objects.filter(fk_app__id_app=1).order_by("id_exercise")
+    reading_exercises_list = Exercise.objects.filter(fk_app__id_app=2).order_by("id_exercise")
     
     math_exercises_avg = get_avg(math_exercises_list)
     reading_exercises_avg = get_avg(reading_exercises_list)
@@ -193,7 +193,7 @@ def get_avg(list):
     
     for exercise in list:
         
-        exercise_avg = Score.objects.filter(fk_exercise_id=exercise.id_exercise).aggregate(Avg('score'))
+        exercise_avg = Score.objects.filter(fk_exercise__id=exercise.id_exercise).aggregate(Avg('score'))
         
         avg_list.append((exercise.id_exercise, exercise_avg, colordict[str(exercise.id_exercise)]))
     
