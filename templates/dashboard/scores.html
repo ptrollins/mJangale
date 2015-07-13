@@ -59,7 +59,7 @@
 	                 	            strokeColor: "rgba(211,6,6,0.8)",
 	                 	            highlightFill: "rgba(211,6,6,0.75)",
 	                 	            highlightStroke: "rgba(220,220,220,1)",
-	                 	            data: [{% for id, avg, lbcolor in math_exercises_avg %} {{ avg.score__avg }}, {% endfor %}]
+	                 	            data: [{% for id, avg, lbcolor in math_exercises_avg %} {{ avg }}, {% endfor %}]
 	                 			}]
             				};
              				var barData2 = {
@@ -69,7 +69,7 @@
 	                 	            strokeColor: "rgba(211,6,6,0.8)",
 	                 	            highlightFill: "rgba(211,6,6,0.75)",
 	                 	            highlightStroke: "rgba(220,220,220,1)",
-	                 	            data: [{% for id, avg, lbcolor in reading_exercises_avg %} {{ avg.score__avg }}, {% endfor %}]
+	                 	            data: [{% for id, avg, lbcolor in reading_exercises_avg %} {{ avg }}, {% endfor %}]
 	                 			}]
              				};
         				</script>
