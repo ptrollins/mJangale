@@ -60,14 +60,14 @@
     				
     				<script>
             			var barChartData = {
-                		labels : [{% for sc in scorecount_month %}"{{ sc.month }}",{% endfor %}],
-                		datasets : [{
-                        	fillColor : "rgba(211,6,6,0.5)",
-                        	strokeColor : "rgba(211,6,6,0.8)",
-                        	highlightFill: "rgba(211,6,6,0.75)",
-                        	highlightStroke: "rgba(211,6,6,1)",
-                        	data : [{% for sc in scorecount_month %}{{ sc.total }},{% endfor %}]
-                    	},]
+	                		labels : [{% for sc in scorecount_month %} "{{ sc.month }}",{% endfor %}],
+	                		datasets : [{
+	                        	fillColor : "rgba(211,6,6,0.5)",
+	                        	strokeColor : "rgba(211,6,6,0.8)",
+	                        	highlightFill: "rgba(211,6,6,0.75)",
+	                        	highlightStroke: "rgba(220,220,220,1)",
+	                        	data : [{% for sc in scorecount_month %}{{ sc.total }},{% endfor %}]
+	                    	},]
             			};
             			
             			window.onload = function(){

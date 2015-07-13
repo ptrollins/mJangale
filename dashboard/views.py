@@ -171,6 +171,34 @@ def usage(request):
 
     return render_to_response('dashboard/usage.html', context_dict, context)
 
+def scores(request):
+    
+    math_exercises_list = Exercise.objects.filter(fk_app_id=1)
+    reading_exercises_list = Exercise.objects.filter(fk_app_id=2)
+    
+    math_exercises_avg = get_avg(math_exercises_list)
+    reading_exercises_avg = get_avg(reading_exercises_list)
+        
+    context_dict = {'math_exercises_avg': math_exercises_avg,
+                    'reading_exercises_avg': reading_exercises_avg,
+                    'title': 'Scores'
+    }
+    
+    return render_to_response('dashboard/scores.html', context_dict, RequestContext(request))
+        
+def get_avg(list):
+    avg_list = []
+    
+    colordict = {'1': '#40af49', '2': '#ac558a', '3': '#f05541', '4': '#3ac2d0', '5': '#faaf3c', '6': '#4287b0'}
+    
+    for exercise in list:
+        
+        exercise_avg = Score.objects.filter(fk_exercise_id=exercise.id_exercise).aggregate(Avg('score'))
+        
+        avg_list.append((exercise.id_exercise, exercise_avg, colordict[str(exercise.id_exercise)]))
+    
+    return avg_list
+        
 def logs(request):
     # Obtain the context from the HTTP request.
     context = RequestContext(request)

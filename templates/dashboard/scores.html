@@ -1,0 +1,78 @@
+{% extends "template.html" %}
+
+
+{% block content %}
+
+<div class="container">
+			<div class="row row-text-center">
+				<div class="col-md-5">
+					<div class="cliente">
+						<div align="center">
+						
+							<h3><strong>CalculerAuCE1 Average Scores</strong></h3>
+            				<canvas id="barchart1" width="250" height="250"></canvas>
+            			
+            				<ul class="doughnut-legend">
+	                			{%  for id, avg, lbcolor in math_exercises_avg %}
+	                 	    		<li><span style="background-color:{{ lbcolor }}"><strong>Exercise {{ id }} Average Score: <b>{{ avg.score__avg }}</b></strong></span></li>
+								{% endfor %}
+            				</ul>
+            			</div>
+					</div>
+				</div>
+				
+				<div class="col-md-5">
+					<div class="cliente">
+						<div align="center">
+							<h3><strong>LireAuCE1 Average Scores</strong></h3>
+            				<canvas id="barchart2" width="250" height="250"></canvas>
+            			
+            				<ul class="doughnut-legend">
+                				{%  for id, avg, lbcolor in reading_exercises_avg %}
+	                 	    		<li><span style="background-color:{{ lbcolor }}"><strong>Exercise {{ id }} Average Score: <b>{{ avg.score__avg }}</b></strong></span></li>
+								{% endfor %}
+            				</ul>
+            			</div>
+            			
+	            		<script>
+             				window.onload = function(){
+	                 			var ctx = document.getElementById("barchart1").getContext("2d");
+	                 				window.myBar = new Chart(ctx).Bar(barData, {
+	                    			responsive : true,
+	                    			barValueSpacing : 20
+	                 			});
+	              			
+	                 			var ctx1 = document.getElementById("barchart2").getContext("2d");
+		                 			window.myBar = new Chart(ctx1).Bar(barData2, {
+		                     		responsive : true
+	                 			});
+
+           					 }
+            				var barData = {
+	                 			labels: [{%  for id, avg, lbcolor in math_exercises_avg %} {{ id }}, {% endfor %}],
+	                 			datasets: [{
+	                 				fillColor: "rgba(211,6,6,0.5)",
+	                 	            strokeColor: "rgba(211,6,6,0.8)",
+	                 	            highlightFill: "rgba(211,6,6,0.75)",
+	                 	            highlightStroke: "rgba(220,220,220,1)",
+	                 	            data: [{% for id, avg, lbcolor in math_exercises_avg %} {{ avg.score__avg }}, {% endfor %}]
+	                 			}]
+            				};
+             				var barData2 = {
+                 			labels: [{%  for id, avg, lbcolor in reading_exercises_avg %} {{ id }}, {% endfor %}],
+	                 			datasets: [{
+	                 				fillColor: "rgba(211,6,6,0.5)",
+	                 	            strokeColor: "rgba(211,6,6,0.8)",
+	                 	            highlightFill: "rgba(211,6,6,0.75)",
+	                 	            highlightStroke: "rgba(220,220,220,1)",
+	                 	            data: [{% for id, avg, lbcolor in reading_exercises_avg %} {{ avg.score__avg }}, {% endfor %}]
+	                 			}]
+             				};
+        				</script>
+					</div>
+				</div>
+				
+			</div>
+</div>
+
+{% endblock %}
