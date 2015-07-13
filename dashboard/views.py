@@ -196,6 +196,9 @@ def get_avg(list):
         
         exercise_avg = Score.objects.filter(fk_exercise__id=exercise.id_exercise).aggregate(Avg('score'))
         
+        if(exercise_avg['score__avg'] == None):
+            exercise_avg['score__avg'] = 0
+        
         avg_list.append((exercise.id_exercise, exercise_avg, colordict[str(exercise.id_exercise)]))
     
     return avg_list
