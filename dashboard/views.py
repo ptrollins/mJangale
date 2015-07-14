@@ -189,22 +189,21 @@ def scores(request):
         
 def get_avg(list):
     avg_list = []
-    
+    all_scores = Score.objects.all()
     colordict = {'1': '#40af49', '2': '#ac558a', '3': '#f05541', '4': '#3ac2d0', '5': '#faaf3c', '6': '#4287b0'}
     
     for exercise in list:
         
         avg = 0
+        counter = 0
         
-        #exercise_avg = Score.objects.filter(fk_exercise__id=exercise.id_exercise).aggregate(Avg('score'))
-        scores = Score.objects.filter(fk_exercise_id=exercise.id_exercise)
+        for score in all_scores:
+            if(exercise.id == score.fk_exercise.id):
+                avg += score.score
+                counter += 1
+                
+        avg = float('%.2f' %(avg/float(counter)))
         
-        for score in scores:
-            avg += score.score
-            
-            
-        if(len(scores) > 0):
-            avg = avg/(float(len(scores)))
         
         avg_list.append((exercise.id_exercise, avg, colordict[str(exercise.id_exercise)]))
     

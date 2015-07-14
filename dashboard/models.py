@@ -72,7 +72,7 @@ class Score(models.Model):
         unique_together = ('fk_student', 'date', 'fk_exercise')
 
     def __unicode__(self):
-        score_return = (str(self.student) + ' - ' + str(self.date) + ' - ' + str(self.exercise))
+        score_return = (str(self.fk_student) + ' - ' + str(self.date) + ' - ' + str(self.fk_exercise))
         return score_return
 
 class Token(models.Model):
