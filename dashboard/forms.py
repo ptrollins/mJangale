@@ -93,6 +93,7 @@ class GenerateTokenForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'type':'email', 'Placeholder':'Email Address'}), required=True)
     role = forms.ChoiceField(choices=user_roles, widget=forms.Select(attrs={'class':'form-control'}), required=True)
     class_id = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'Class ID'}))
+    school_id = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'Placeholder':'School ID'}))
     
     def __init__(self, *args, **kwargs):
         super(GenerateTokenForm, self).__init__(*args, **kwargs)

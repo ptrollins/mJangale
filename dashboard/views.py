@@ -452,7 +452,7 @@ def generate_token(request):
     if(request.method == 'POST'):
         
         form = GenerateTokenForm(request.POST)
-        token = generate_a_token(request.POST['role'], request.POST['class_id'])
+        token = generate_a_token(request.POST['role'], request.POST['class_id'], request.POST['school_id'])
     
         message = '''Good news!
 Your token request for mJangale Data has been approved!
@@ -471,7 +471,7 @@ Now you can head to mjangale.herokuapp/dashboard/register/ and Sign Up for an mJ
         form = GenerateTokenForm(auto_id=False)
         return render_to_response('token/generate_token.html', {'form': form, 'title':'Generate Token'}, context_instance=RequestContext(request))
 
-def generate_a_token(role, id):
+def generate_a_token(role, id, school):
     #Generates and shuffles a string with digits and letters 
     chars = (string.ascii_letters + string.digits)
     charlist = list(chars)
@@ -498,7 +498,7 @@ def generate_a_token(role, id):
                 break
         
         if not (existing_token):
-            Token.objects.create(hashed_token=hash_token, used=False, user_role=role, class_id=id)
+            Token.objects.create(hashed_token=hash_token, used=False, user_role=role, class_id=id, school_id=school)
             return token.decode('utf-8')
     
 def register(request):
@@ -519,7 +519,16 @@ def register(request):
                 user = User.objects.create_user(username=request.POST['username'], 
                                                 email=request.POST['email'], password=request.POST['password2'], 
                                                 role=token.user_role,
-                                                class_id=token.class_id)
+                                                class_id=token.class_id,
+                                                school_id=token.school_id)
+                
+                if(user.role == 'Admin'):
+                    user.is_staff = True
+                    user.is_superuser = True
+                    
+                if(user.role != 'Teacher'):
+                    user.class_id = '*'
+                
                 user.save()
                     
                 return render_to_response("auth/register_success.html" , {} , context_instance=RequestContext(request))

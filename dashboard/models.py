@@ -20,6 +20,7 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     role = models.CharField(max_length=20, default='')
     class_id = models.CharField(max_length=5, default='*')
+    school_id = models.CharField(max_length=5, default='')
 
 class App(models.Model):
     id_app = models.PositiveSmallIntegerField()
@@ -81,3 +82,4 @@ class Token(models.Model):
     used = models.BooleanField(default=False)
     user_role = models.CharField(max_length=20, default='')
     class_id = models.CharField(max_length=5, default='*')
+    school_id = models.CharField(max_length=5, default='')
