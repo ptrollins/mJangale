@@ -218,8 +218,6 @@ def logs(request):
     #scores_list = Score.objects.order_by("fk_exercise__id_exercise")
     scores_list = Score.objects.order_by("date")[::-1]
     
-    # score_list = [s.score for s in Score.objects.all()]
-    # {'score_list': [student_score.score for student_score in Score.objects.get(student__id=3)]}
     context_dict = {"score": scores_list,
                     "title": 'Logs'
     }
